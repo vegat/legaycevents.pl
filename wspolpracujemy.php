@@ -35,7 +35,7 @@
                 ],
                 [
                     'name' => 'Zamek Ząbkowice Śląskie',
-                    'desc' => 'Tajemnicze ruiny zamku Frankensteina, będące doskonałym tłem dla naszych najbardziej angażujących wydarzeń grozy.'
+                    'desc' => 'Tajemnicze ruiny zamku z podwójnymi scianami dziedzińca, będące doskonałym tłem dla każdego wydarzenia.'
                 ],
                 [
                     'name' => 'Zamek Bolków',
@@ -44,11 +44,11 @@
                 ],
                 [
                     'name' => 'Zamek Międzyrzecz',
-                    'desc' => 'Wyjątkowy zabytkowy zamek, z którym współpracujemy przy tworzeniu unikalnych i wciągających narracji terenowych.'
+                    'desc' => 'Wyjątkowy zabytkowy zamek o pięknym, zielonym dziedzińcu, z którym współpracujemy przy tworzeniu unikalnych i wciągających narracji terenowych.'
                 ],
                 [
                     'name' => 'Stara Podkowa',
-                    'desc' => 'Urokliwe miejsce pełne rustykalnego klimatu, wspierające nasze wydarzenia doskonałą bazą noclegową i gastronomiczną.',
+                    'desc' => 'Urokliwe miejsce pełne rustykalnego klimatu, wspierające nasze wydarzenia bazą noclegową i gastronomiczną.',
                     'link' => 'https://www.facebook.com/starapodkowa'
                 ]
             ];

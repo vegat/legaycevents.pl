@@ -18,8 +18,8 @@
 
         <div class="footer-col" style="display:flex; flex-direction:column; gap:20px;">
             <a href="/" style="display:inline-block; margin-bottom: 5px;">
-                <img src="image.php?src=Logo/legacyevents_transparent.png&w=400&h=150" alt="LegacyEvents Logo"
-                    style="max-width: 250px; height: auto;">
+                <img src="image.php?src=Logo/legacyevents_transparent.png&w=300&h=0" alt="LegacyEvents Logo"
+                    style="max-width: 350px; height: auto;">
             </a>
             <p style="color: rgba(255,255,255,0.7); line-height: 1.6; font-size: 0.95rem;">
                 LegacyEvents - Specjalizujemy się w nietuzinkowych wydarzeniach i ożywianiu zamków, ruin oraz innych
@@ -52,7 +52,7 @@
                 style="color: var(--primary-color); margin-bottom: 20px; font-family: var(--font-heading); font-size: 1.2rem;">
                 Kontakt</h4>
             <p style="color: rgba(255,255,255,0.8); line-height: 1.6; font-size: 0.95rem;">
-                <strong>Legacy Events By Michał Lipa</strong><br>
+                <strong>Legacy Events</strong><br>
                 Tel: 780 752 938<br>
                 <a href="mailto:kontakt@legacyevents.pl"
                     style="color: rgba(255,255,255,0.8); text-decoration:none;">kontakt@legacyevents.pl</a><br><br>

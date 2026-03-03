@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Caveat:wght@600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=2">
     <?php
     if (isset($heroSliderImages) && is_array($heroSliderImages)) {
         foreach ($heroSliderImages as $imgUrl) {
@@ -25,7 +25,7 @@
         <div class="header-container">
             <div class="logo">
                 <a href="/">
-                    <img src="image.php?src=Logo/legacyevents_transparent.png&h=300" alt="LegacyEvents Logo">
+                    <img src="image.php?src=Logo/legacyevents_transparent.png&h=80" alt="LegacyEvents Logo">
                 </a>
             </div>
             <nav class="main-nav">
