@@ -1,0 +1,7 @@
+{
+  "_comment": "Zmień 'active' na false, jeśli nie ma jeszcze zaplanowanego wydarzenia, aby wyświetliło się 'Wkrótce'",
+  "active": true,
+  "title": "Akademia Magii na Zamku Świny",
+  "date": "6 kwietnia 2026",
+  "link": "https://magia.legacyevents.pl/swiny"
+}

@@ -85,7 +85,12 @@ require_once 'header.php';
 
     <!-- Full Width Feature Image & Upcoming Event Box -->
     <?php
-    // Upcoming event config
+    // Zmienna z zewnętrznym URL do pliku JSON z danymi wydarzenia
+    $event_json_url = 'https://raw.githubusercontent.com/vegat/legacyconfig/refs/heads/main/LegacyNextEvent.json';
+    $cache_file = __DIR__ . '/upcoming_event_cache.json';
+    $cache_time = 86400; // 24h w sekundach
+
+    // Zmienne domyślne dla stanu błędu - fallback na obecny wygląd (Wkrótce)
     $upcoming_event = [
         'subtitle' => 'Już wkrótce zobaczymy się na...',
         'title' => 'Akademii Magii',
@@ -94,6 +99,46 @@ require_once 'header.php';
         'social_text' => 'Obserwuj na FB/Instagram aby być na bieżąco!',
         'social_link' => 'https://www.facebook.com/profile.php?id=61560702814608' // docelowy link z kontaktu
     ];
+
+    $fetched_event = null;
+    $is_active_event = false;
+
+    // Sprawdzenie czy cache istnieje i czy jest wazny (ponizej 24h)
+    if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
+        $json_data = file_get_contents($cache_file);
+        if ($json_data !== false) {
+            $fetched_event = json_decode($json_data, true);
+        }
+    } else {
+        // Pobieranie nowych danych z URL jeśli cache wygasł
+        $context = stream_context_create(['http' => ['timeout' => 5]]);
+        $json_data = @file_get_contents($event_json_url, false, $context);
+        
+        if ($json_data !== false) {
+            $parsed = json_decode($json_data, true);
+            if ($parsed !== null) {
+                file_put_contents($cache_file, $json_data);
+                $fetched_event = $parsed;
+            }
+        } elseif (file_exists($cache_file)) {
+            // W razie błędu serwera JSON, zaczytanie ostatniego dobrego cache, nawet jeśli jest stary
+            $fetched_event = json_decode(file_get_contents($cache_file), true);
+        }
+    }
+
+    // Aplikowanie pobranych danych z JSON;
+    if (is_array($fetched_event) && isset($fetched_event['active']) && $fetched_event['active']) {
+        $is_active_event = true;
+        // Aktualizacja tytułu, daty i linku jeśli przesłane
+        $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : $upcoming_event['title'];
+        $upcoming_event['date']  = !empty($fetched_event['date']) ? $fetched_event['date'] : $upcoming_event['date'];
+        $upcoming_event['link']  = !empty($fetched_event['link']) ? $fetched_event['link'] : $upcoming_event['link'];
+    } elseif (is_array($fetched_event) && isset($fetched_event['active']) && !$fetched_event['active']) {
+        // Jeśli JSON zadeklarował brak bieżącego wydarzenia, wyświetlamy status "Wkrótce"
+        $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : 'Kolejnych Naszych Wydarzeniach';
+        $upcoming_event['date']  = 'Wkrótce';
+        $upcoming_event['link']  = '#';
+    }
     ?>
     <section class="feature-image-section">
         <div class="feature-image-wrapper">
@@ -113,8 +158,13 @@ require_once 'header.php';
                         <span class="detail-label">Data:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($upcoming_event['date']); ?></span>
                     </div>
+                    <?php if ($is_active_event && $upcoming_event['link'] !== '#'): ?>
+                    <a href="<?php echo htmlspecialchars($upcoming_event['link']); ?>"
+                        class="cta-button primary small-btn">Sprawdź wydarzenie</a>
+                    <?php else: ?>
                     <a href="<?php echo htmlspecialchars($upcoming_event['link']); ?>"
                         class="cta-button primary small-btn">Link do wydarzenia: Wkrótce!</a>
+                    <?php endif; ?>
                 </div>
             </div>
 

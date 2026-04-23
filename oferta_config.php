@@ -29,6 +29,12 @@ $oferta_config = [
         'desc' => 'Kompleksowa obsługa techniczna koncertów w dowolnej lokalizacji. Potężne nagłośnienie 6kW+, oświetlenie sceniczne i profesjonalna realizacja.',
         'image' => '/image.php?src=' . urlencode('EventPhotos/stara_podkowa_koncert-124.jpg') . '&w=1920',
         'link' => 'oferta_koncerty'
+    ],
+    'zamki' => [
+        'title' => 'Oferta dla Zamków',
+        'desc' => 'Przebudź mury swojego zamku. Tworzymy wydarzenia z fabułą, budujemy pełną infrastrukturę i zapewniamy najnowszą technologię angażującą odwiedzających.',
+        'image' => '/image.php?src=' . urlencode('Events/moonlight_castle_2025/CV300261-ARW.jpg') . '&w=1920',
+        'link' => 'oferta_zamki'
     ]
 ];
 ?>

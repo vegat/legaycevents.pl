@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Caveat:wght@600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Caveat:wght@600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=3">
     <?php
@@ -39,6 +39,7 @@
                             <li><a href="oferta_animacje">Animacje</a></li>
                             <li><a href="oferta_rental">Rental</a></li>
                             <li><a href="oferta_koncerty">Koncerty</a></li>
+                            <li style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 5px; padding-top: 5px;"><a href="oferta_zamki" style="color: var(--primary-color);">Dla Zamków 🏰</a></li>
                         </ul>
                     </li>
                     <li><a href="galeria">Galeria</a></li>

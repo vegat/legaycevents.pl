@@ -11,8 +11,8 @@
     --card-bg: rgba(20, 20, 30, 0.7);
     --border-color: rgba(255, 255, 255, 0.05);
 
-    --font-main: 'Outfit', sans-serif;
-    --font-heading: 'Outfit', sans-serif;
+    --font-main: 'Space Grotesk', sans-serif;
+    --font-heading: 'Space Grotesk', sans-serif;
 }
 
 * {
@@ -1432,7 +1432,9 @@ ul {
     margin: 2.5rem 0;
 }
 
-.text-content strong { color: #fff; }
+.text-content strong {
+    color: #fff;
+}
 
 /* MASONRY GALLERY */
 .gallery-page .content-section {
