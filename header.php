@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/Logo/legacy_sticker.png">
+    <link rel="apple-touch-icon" href="/assets/Logo/legacy_sticker.png">
     <?php
     $seo_config_file = __DIR__ . '/data/seo_config.json';
     $seo_cfg = file_exists($seo_config_file) ? json_decode(file_get_contents($seo_config_file), true) : [];
