@@ -8,6 +8,34 @@
     $seo_config_file = __DIR__ . '/data/seo_config.json';
     $seo_cfg = file_exists($seo_config_file) ? json_decode(file_get_contents($seo_config_file), true) : [];
     
+    $pages_seo_file = __DIR__ . '/data/pages_seo.json';
+    if (!file_exists($pages_seo_file)) {
+        $default_pages_seo = [
+            'index.php' => ['title' => 'Strona Główna - Agencja Eventowa LegacyEvents', 'desc' => 'Agencja LegacyEvents to profesjonalna organizacja wydarzeń, koncertów i pokazów. Wkrocz w świat zaawansowanej scenotechniki i zorganizuj wymarzony event.'],
+            'oferta.php' => ['title' => 'Pełna Oferta - Technika, Wynajem, Animacje', 'desc' => 'Odkryj potężny arsenał możliwości LegacyEvents. Wynajem sprzętu, nagłośnienie, oświetlenie, animacje i technika estradowa.'],
+            'oferta_animacje.php' => ['title' => 'Animacje i Kostiumy | Atrakcje na event', 'desc' => 'Zaczaruj swój event z LegacyEvents! Wynajem przepięknych kostiumów i profesjonalne animacje dla dzieci i dorosłych.'],
+            'oferta_koncerty.php' => ['title' => 'Realizacja Koncertów | Obsługa Techniczna', 'desc' => 'Krystalicznie czysty dźwięk i oszałamiające efekty świetlne. Kompleksowa realizacja techniczna koncertów plenerowych, klubowych i festiwali.'],
+            'oferta_rental.php' => ['title' => 'Wynajem Sprzętu Eventowego', 'desc' => 'Profesjonalny rental sprzętu eventowego. Oferujemy nowoczesne nagłośnienie, oświetlenie, konstrukcje sceniczne i lasery.'],
+            'oferta_technika.php' => ['title' => 'Technika Sceniczna i Światła', 'desc' => 'Potężne nagłośnienie i widowiskowe światła. Zaufaj specjalistom z LegacyEvents i wykorzystaj bezkompromisową technikę sceniczną.'],
+            'oferta_wydarzenia.php' => ['title' => 'Organizacja Wydarzeń i Eventów', 'desc' => 'Kompleksowo prowadzimy wydarzenia korporacyjne, festyny, eventy promocyjne i masowe od pierwszego szkicu aż po wielki finał.'],
+            'oferta_zamki.php' => ['title' => 'Dmuchane Zamki i Zjeżdżalnie na Wynajem', 'desc' => 'Rozkręć każdą imprezę plenerową! Wypożycz ogromne dmuchane zamki, potężne zjeżdżalnie i kolorowe atrakcje dla dzieci.'],
+            'kontakt.php' => ['title' => 'Kontakt z LegacyEvents', 'desc' => 'Masz pomysł na spektakularny event? Skontaktuj się z agencją LegacyEvents! Szybka darmowa wycena i doradztwo techniczne.'],
+            'galeria.php' => ['title' => 'Galeria Realizacji Eventowych', 'desc' => 'Obrazy mówią więcej niż tysiąc słów. Zobacz zjawiskowe zdjęcia z naszych dotychczasowych realizacji, pokazów i koncertów.'],
+            'wspolpracujemy.php' => ['title' => 'Nasi Partnerzy', 'desc' => 'Poznaj zaufane marki i profesjonalistów, z którymi LegacyEvents współtworzy największe widowiska na terenie całej Polski.']
+        ];
+        if (is_dir(__DIR__ . '/data')) {
+            file_put_contents($pages_seo_file, json_encode($default_pages_seo, JSON_PRETTY_PRINT));
+        }
+    }
+    
+    $pages_seo = file_exists($pages_seo_file) ? json_decode(file_get_contents($pages_seo_file), true) : [];
+    $current_file = basename($_SERVER['PHP_SELF']);
+    
+    if (isset($pages_seo[$current_file])) {
+        $seo_title = $pages_seo[$current_file]['title'];
+        $seo_description = $pages_seo[$current_file]['desc'];
+    }
+
     $final_title = $seo_title ?? $seo_cfg['global_title'] ?? 'LegacyEvents';
     $final_desc = $seo_description ?? $seo_cfg['global_description'] ?? '';
     

@@ -212,6 +212,35 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         header("Location: adminpanel?msg=Ustawienia+SEO+zapisane");
         exit;
     }
+
+    // Save Subpage SEO
+    if ($_POST['action'] === 'save_subpage_seo') {
+        $page_id = $_POST['page_id'];
+        $pages_seo_file = $data_dir . '/pages_seo.json';
+        $pages_seo = file_exists($pages_seo_file) ? json_decode(file_get_contents($pages_seo_file), true) : [];
+        if ($page_id && isset($pages_seo[$page_id])) {
+            $pages_seo[$page_id]['title'] = $_POST['page_title'];
+            $pages_seo[$page_id]['desc'] = $_POST['page_desc'];
+            file_put_contents($pages_seo_file, json_encode($pages_seo, JSON_PRETTY_PRINT));
+            header("Location: adminpanel?msg=SEO+Podstrony+zapisane");
+            exit;
+        }
+    }
+
+    // Save NextEvent
+    $next_event_json = __DIR__ . '/LegacyNextEvent.json';
+    if ($_POST['action'] === 'save_nextevent') {
+        $event_data = [
+            'active' => isset($_POST['event_active']) ? true : false,
+            'title' => $_POST['event_title'],
+            'subtitle' => $_POST['event_subtitle'],
+            'date' => $_POST['event_date'],
+            'link' => $_POST['event_link']
+        ];
+        file_put_contents($next_event_json, json_encode($event_data, JSON_PRETTY_PRINT));
+        header("Location: adminpanel?msg=Wydarzenie+NextEvent+zapisane");
+        exit;
+    }
     
     if ($_POST['action'] === 'add' || $_POST['action'] === 'edit') {
         $id = $_POST['id'] ?? uniqid();
@@ -341,9 +370,11 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
     <?php else: ?>
         <div class="admin-header">
             <h2>Zarządzanie Stroną</h2>
-            <div>
-                <button onclick="document.getElementById('seoModal').style.display='block'" style="background:var(--primary-color); margin-right:15px;">Ustawienia SEO/GEO</button>
-                <a href="?logout=1" style="color:#fff; text-decoration:none;">Wyloguj</a>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button onclick="document.getElementById('nextEventModal').style.display='block'" style="background:#f39c12; margin:0;">Zarządzaj NextEvent</button>
+                <button onclick="document.getElementById('subSeoModal').style.display='block'" style="background:#8e44ad; margin:0;">SEO Podstron</button>
+                <button onclick="document.getElementById('seoModal').style.display='block'" style="background:var(--primary-color); margin:0;">Globalne SEO/GEO</button>
+                <a href="?logout=1" style="color:#fff; text-decoration:none; margin-left: 15px;">Wyloguj</a>
             </div>
         </div>
         
@@ -434,7 +465,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
             </div>
         </div>
         
-        <!-- Modal SEO -->
+        <!-- Modal Global SEO -->
         <div id="seoModal" class="modal">
             <div class="modal-content">
                 <h3>Globalne Ustawienia SEO & GEO</h3>
@@ -448,18 +479,92 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <label>Domyślny Opis Strony (Meta Description):</label>
                     <textarea name="global_description" style="width:100%; height:100px; background:#222; border:1px solid #444; color:#fff; padding:10px; margin-bottom:15px;"><?= htmlspecialchars($seo_config['global_description'] ?? '') ?></textarea>
                     
-                    <label>Globalna Nazwa GEO (np. Bolków):</label>
+                    <label>Globalna Nazwa GEO:</label>
                     <input type="text" name="geo_placename" value="<?= htmlspecialchars($seo_config['geo_placename'] ?? '') ?>">
                     
-                    <label>Globalne Koordynaty GEO (np. 50.92, 16.10):</label>
+                    <label>Globalne Koordynaty GEO:</label>
                     <input type="text" name="geo_position" value="<?= htmlspecialchars($seo_config['geo_position'] ?? '') ?>">
                     
                     <label>Globalne Zdjęcie OpenGraph (URL):</label>
                     <input type="text" name="og_image" value="<?= htmlspecialchars($seo_config['og_image'] ?? '') ?>">
                     
                     <div style="margin-top: 20px;">
-                        <button type="submit">Zapisz Ustawienia SEO</button>
+                        <button type="submit">Zapisz Globalne SEO</button>
                         <button type="button" class="btn-danger" onclick="document.getElementById('seoModal').style.display='none'">Zamknij</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Subpage SEO -->
+        <div id="subSeoModal" class="modal">
+            <div class="modal-content">
+                <h3>Indywidualne SEO Podstron</h3>
+                <form method="POST">
+                    <input type="hidden" name="action" value="save_subpage_seo">
+                    <?php 
+                    $pages_seo_file = $data_dir . '/pages_seo.json';
+                    $pages_seo = file_exists($pages_seo_file) ? json_decode(file_get_contents($pages_seo_file), true) : [];
+                    ?>
+                    <label>Wybierz podstronę do edycji:</label>
+                    <select name="page_id" id="subpageSelect" onchange="updateSubpageSeoForm()" style="width:100%; padding:10px; margin-bottom:15px; background:#222; color:#fff; border:1px solid #444; border-radius:5px;">
+                        <option value="">-- Wybierz --</option>
+                        <?php foreach($pages_seo as $file => $data): ?>
+                            <option value="<?= htmlspecialchars($file) ?>"><?= htmlspecialchars($file) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <div id="subpageSeoFields" style="display:none;">
+                        <label>Tytuł (Title):</label>
+                        <input type="text" name="page_title" id="subpageTitle" required>
+                        
+                        <label>Opis (Description):</label>
+                        <textarea name="page_desc" id="subpageDesc" style="width:100%; height:100px; background:#222; border:1px solid #444; color:#fff; padding:10px; margin-bottom:15px;" required></textarea>
+                        
+                        <div style="margin-top: 20px;">
+                            <button type="submit">Zapisz SEO dla tej strony</button>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button type="button" class="btn-danger" onclick="document.getElementById('subSeoModal').style.display='none'">Zamknij</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal NextEvent -->
+        <div id="nextEventModal" class="modal">
+            <div class="modal-content">
+                <h3>Zarządzanie Nadchodzącym Wydarzeniem</h3>
+                <form method="POST">
+                    <input type="hidden" name="action" value="save_nextevent">
+                    <?php 
+                    $next_event_file = __DIR__ . '/LegacyNextEvent.json';
+                    $ne = file_exists($next_event_file) ? json_decode(file_get_contents($next_event_file), true) : [];
+                    $isActive = isset($ne['active']) && $ne['active'] ? 'checked' : '';
+                    ?>
+                    
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; margin-bottom: 20px; font-weight:bold;">
+                        <input type="checkbox" name="event_active" value="1" <?= $isActive ?> style="width:20px; height:20px; margin:0;">
+                        Aktywuj Wydarzenie na Stronie Głównej
+                    </label>
+                    
+                    <label>Nazwa / Tytuł:</label>
+                    <input type="text" name="event_title" value="<?= htmlspecialchars($ne['title'] ?? '') ?>">
+                    
+                    <label>Sub-tytuł:</label>
+                    <input type="text" name="event_subtitle" value="<?= htmlspecialchars($ne['subtitle'] ?? 'Już wkrótce zobaczymy się na...') ?>">
+                    
+                    <label>Data wydarzenia:</label>
+                    <input type="text" name="event_date" value="<?= htmlspecialchars($ne['date'] ?? '') ?>">
+                    
+                    <label>Link docelowy (URL):</label>
+                    <input type="text" name="event_link" value="<?= htmlspecialchars($ne['link'] ?? '#') ?>">
+                    
+                    <div style="margin-top: 20px;">
+                        <button type="submit">Zapisz Wydarzenie</button>
+                        <button type="button" class="btn-danger" onclick="document.getElementById('nextEventModal').style.display='none'">Zamknij</button>
                     </div>
                 </form>
             </div>
@@ -467,6 +572,22 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
 
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script>
+            var pagesSeoData = <?= json_encode($pages_seo ?? []) ?>;
+            function updateSubpageSeoForm() {
+                var select = document.getElementById('subpageSelect');
+                var fields = document.getElementById('subpageSeoFields');
+                var title = document.getElementById('subpageTitle');
+                var desc = document.getElementById('subpageDesc');
+                var file = select.value;
+                if(file && pagesSeoData[file]) {
+                    fields.style.display = 'block';
+                    title.value = pagesSeoData[file].title;
+                    desc.value = pagesSeoData[file].desc;
+                } else {
+                    fields.style.display = 'none';
+                }
+            }
+
             var quill = new Quill('#quillEditor', {
                 theme: 'snow',
                 modules: {
