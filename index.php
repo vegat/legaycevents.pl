@@ -1,4 +1,6 @@
 <?php
+$seo_title = "LegacyEvents - Kompleksowa organizacja eventów";
+$seo_description = "Tworzymy niesamowite wydarzenia, koncerty, eventy firmowe oraz pokazy sceniczne. Poznaj możliwości agencji LegacyEvents na Dolnym Śląsku.";
 // Prepare hero slider images before header to allow preloading
 $heroSliderImages = [];
 $photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);

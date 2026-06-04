@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Dmuchane Zamki i Atrakcje | LegacyEvents";
+$seo_description = "Wynajem dmuchanych zamków, zjeżdżalni i atrakcji plenerowych dla dzieci i dorosłych.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Dmuchane Zamki i Atrakcje",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Wynajem dmuchanych zamków, zjeżdżalni i atrakcji plenerowych dla dzieci i dorosłych."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 
 // Konfiguracja sekcji "Zaufali Nam" - lista zamków, plików wideo i linków

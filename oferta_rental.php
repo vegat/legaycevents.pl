@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Wynajem Sprzętu Eventowego | LegacyEvents";
+$seo_description = "Wypożyczalnia sprzętu estradowego, oświetleniowego i nagłośnieniowego. Sprzęt najwyższej klasy na Twój event.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Wynajem Sprzętu Eventowego",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Wypożyczalnia sprzętu estradowego, oświetleniowego i nagłośnieniowego. Sprzęt najwyższej klasy na Twój event."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 require_once 'oferta_config.php';
 $cat = $oferta_config['rental'];

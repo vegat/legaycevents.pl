@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Organizacja Wydarzeń | LegacyEvents";
+$seo_description = "Kompleksowa organizacja wydarzeń masowych i firmowych. Zajmiemy się wszystkim od A do Z.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Organizacja Wydarzeń",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Kompleksowa organizacja wydarzeń masowych i firmowych. Zajmiemy się wszystkim od A do Z."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 require_once 'oferta_config.php';
 $cat = $oferta_config['wydarzenia'];

@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Technika Sceniczna | LegacyEvents";
+$seo_description = "Nowoczesna technika sceniczna, światła, sceny, efekty specjalne i lasery. Tworzymy niesamowite widowiska.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Technika Sceniczna",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Nowoczesna technika sceniczna, światła, sceny, efekty specjalne i lasery. Tworzymy niesamowite widowiska."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 require_once 'oferta_config.php';
 $cat = $oferta_config['technika'];

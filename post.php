@@ -28,27 +28,14 @@ if (!empty($post['image'])) {
     $og_image = "https://$_SERVER[HTTP_HOST]/" . ltrim($post['image'], '/');
 }
 
-// GEO tags + OpenGraph + Schema.org
+$geo_placename = !empty($post['geo_placename']) ? htmlspecialchars($post['geo_placename']) : 'Bolków';
+$geo_position_str = !empty($post['geo_position']) ? htmlspecialchars($post['geo_position']) : '50.92, 16.10';
+$geo_position_parts = array_map('trim', explode(',', $geo_position_str));
+$geo_lat = $geo_position_parts[0] ?? '50.92';
+$geo_lon = $geo_position_parts[1] ?? '16.10';
+
+// Schema.org BlogPosting
 ob_start(); ?>
-    <meta property="og:title" content="<?= $seo_title ?>">
-    <meta property="og:description" content="<?= $seo_description ?>">
-    <meta property="og:image" content="<?= $og_image ?>">
-    <meta property="og:url" content="<?= $current_url ?>">
-    <meta property="og:type" content="article">
-    
-    <!-- GEO Tags -->
-    <?php 
-    $geo_placename = !empty($post['geo_placename']) ? htmlspecialchars($post['geo_placename']) : 'Bolków';
-    $geo_position_str = !empty($post['geo_position']) ? htmlspecialchars($post['geo_position']) : '50.92, 16.10';
-    $geo_position_parts = array_map('trim', explode(',', $geo_position_str));
-    $geo_lat = $geo_position_parts[0] ?? '50.92';
-    $geo_lon = $geo_position_parts[1] ?? '16.10';
-    ?>
-    <meta name="geo.region" content="PL-DS" />
-    <meta name="geo.placename" content="<?= $geo_placename ?>" />
-    <meta name="geo.position" content="<?= $geo_lat ?>;<?= $geo_lon ?>" />
-    <meta name="ICBM" content="<?= $geo_position_str ?>" />
-    
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -70,7 +57,7 @@ ob_start(); ?>
           "image": "https://<?= $_SERVER['HTTP_HOST'] ?>/assets/Logo/legacyevents_transparent.png",
           "address": {
             "@type": "PostalAddress",
-            "addressLocality": "<?= $geo_placename ?>",
+            "addressLocality": "<?= htmlspecialchars($geo_placename) ?>",
             "addressRegion": "Dolnośląskie",
             "addressCountry": "PL"
           },
@@ -85,7 +72,7 @@ ob_start(); ?>
     }
     </script>
 <?php
-$seo_tags = ob_get_clean();
+$seo_schema = ob_get_clean();
 
 require_once 'header.php'; 
 ?>

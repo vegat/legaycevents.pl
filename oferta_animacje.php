@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Animacje i Kostiumy | LegacyEvents";
+$seo_description = "Profesjonalne animacje i wynajem kostiumów na eventy. Zapewniamy niezapomniane wrażenia dla uczestników każdego wydarzenia.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Animacje i Kostiumy",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Profesjonalne animacje i wynajem kostiumów na eventy. Zapewniamy niezapomniane wrażenia dla uczestników każdego wydarzenia."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 require_once 'oferta_config.php';
 $cat = $oferta_config['animacje'];

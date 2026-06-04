@@ -1,4 +1,6 @@
 <?php
+$seo_title = "Galeria Realizacji Eventowych | LegacyEvents";
+$seo_description = "Zobacz zdjęcia z naszych najlepszych realizacji. Koncerty, pokazy, scenotechnika, animacje i wiele więcej pięknych chwil ujętych w kadrach.";
 require_once 'header.php';
 require_once 'galeria_config.php';
 ?>

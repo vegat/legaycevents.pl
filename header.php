@@ -4,12 +4,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $seo_title ?? 'LegacyEvents - Tworzymy światy, nie tylko eventy - Eventy, Pokazy Świetlne, Videomapping' ?></title>
-    <?php if (isset($seo_description)): ?>
-    <meta name="description" content="<?= htmlspecialchars($seo_description) ?>">
+    <?php
+    $seo_config_file = __DIR__ . '/data/seo_config.json';
+    $seo_cfg = file_exists($seo_config_file) ? json_decode(file_get_contents($seo_config_file), true) : [];
+    
+    $final_title = $seo_title ?? $seo_cfg['global_title'] ?? 'LegacyEvents';
+    $final_desc = $seo_description ?? $seo_cfg['global_description'] ?? '';
+    
+    $geo_name = $geo_placename ?? $seo_cfg['geo_placename'] ?? 'Bolków';
+    $geo_pos_str = $geo_position ?? $seo_cfg['geo_position'] ?? '50.92, 16.10';
+    $geo_pos_parts = array_map('trim', explode(',', $geo_pos_str));
+    $geo_lat = $geo_pos_parts[0] ?? '50.92';
+    $geo_lon = $geo_pos_parts[1] ?? '16.10';
+    $og_img = $og_image ?? $seo_cfg['og_image'] ?? ('https://' . $_SERVER['HTTP_HOST'] . '/assets/Logo/legacyevents_transparent.png');
+    $current_url = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    ?>
+    <title><?= htmlspecialchars($final_title) ?></title>
+    <?php if (!empty($final_desc)): ?>
+    <meta name="description" content="<?= htmlspecialchars($final_desc) ?>">
     <?php endif; ?>
+    
+    <!-- Open Graph Global -->
+    <meta property="og:title" content="<?= htmlspecialchars($final_title) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($final_desc) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($og_img) ?>">
+    <meta property="og:url" content="<?= htmlspecialchars($current_url) ?>">
+    <meta property="og:type" content="<?= $og_type ?? 'website' ?>">
+    
+    <!-- GEO Tags Global -->
+    <meta name="geo.region" content="PL-DS" />
+    <meta name="geo.placename" content="<?= htmlspecialchars($geo_name) ?>" />
+    <meta name="geo.position" content="<?= htmlspecialchars($geo_lat) ?>;<?= htmlspecialchars($geo_lon) ?>" />
+    <meta name="ICBM" content="<?= htmlspecialchars($geo_pos_str) ?>" />
+
     <?php if (isset($seo_tags)): ?>
-    <?= $seo_tags ?>
+        <?= $seo_tags ?>
+    <?php endif; ?>
+    
+    <?php if (isset($seo_schema)): ?>
+        <script type="application/ld+json"><?= $seo_schema ?></script>
+    <?php else: ?>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "LegacyEvents",
+          "image": "<?= htmlspecialchars($og_img) ?>",
+          "url": "https://<?= $_SERVER['HTTP_HOST'] ?>",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "<?= htmlspecialchars($geo_name) ?>",
+            "addressRegion": "Dolnośląskie",
+            "addressCountry": "PL"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": <?= floatval($geo_lat) ?>,
+            "longitude": <?= floatval($geo_lon) ?>
+          },
+          "telephone": "780 752 938"
+        }
+        </script>
     <?php endif; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

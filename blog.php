@@ -1,4 +1,6 @@
-<?php require_once 'header.php'; ?>
+<?php
+$seo_title = "Blog Eventowy | LegacyEvents";
+$seo_description = "Najnowsze wpisy, aktualności, porady i relacje ze świata eventów, imprez oraz zaawansowanej techniki scenicznej."; require_once 'header.php'; ?>
 
 <main class="page-wrapper">
     <section class="subpage-hero">

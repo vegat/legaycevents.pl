@@ -24,6 +24,17 @@ if ($needs_fix) {
     if (file_exists($attempts_json)) @unlink($attempts_json); // Odblokowanie po błędzie
 }
 
+$seo_json = $data_dir . '/seo_config.json';
+if (!file_exists($seo_json)) {
+    file_put_contents($seo_json, json_encode([
+        'global_title' => 'LegacyEvents - Tworzymy światy, nie tylko eventy',
+        'global_description' => 'Kompleksowa organizacja wydarzeń. Scenotechnika, efekty wizualne, nagłośnienie i oświetlenie. Zobacz naszą ofertę!',
+        'geo_placename' => 'Bolków',
+        'geo_position' => '50.92, 16.10',
+        'og_image' => 'https://widget.legacyevents.pl/assets/Logo/legacyevents_transparent.png'
+    ], JSON_PRETTY_PRINT));
+}
+
 $posts_json = $data_dir . '/posts.json';
 $upload_dir = __DIR__ . '/assets/blog/';
 
@@ -188,8 +199,22 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
     $posts = file_exists($posts_json) ? json_decode(file_get_contents($posts_json), true) : [];
     if (!is_array($posts)) $posts = [];
     
+    // Save SEO settings
+    if ($_POST['action'] === 'save_seo') {
+        $seo_data = [
+            'global_title' => $_POST['global_title'],
+            'global_description' => $_POST['global_description'],
+            'geo_placename' => $_POST['geo_placename'],
+            'geo_position' => $_POST['geo_position'],
+            'og_image' => $_POST['og_image']
+        ];
+        file_put_contents($seo_json, json_encode($seo_data, JSON_PRETTY_PRINT));
+        header("Location: adminpanel?msg=Ustawienia+SEO+zapisane");
+        exit;
+    }
+    
     if ($_POST['action'] === 'add' || $_POST['action'] === 'edit') {
-        $id = $_POST['action'] === 'edit' ? $_POST['id'] : uniqid();
+        $id = $_POST['id'] ?? uniqid();
         $title = trim($_POST['title']);
         $content = $_POST['content']; 
         $excerpt = strip_tags($content);
@@ -315,8 +340,11 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         </div>
     <?php else: ?>
         <div class="admin-header">
-            <h2>Zarządzanie Blogiem</h2>
-            <a href="?logout=1" style="color:#fff; text-decoration:none;">Wyloguj</a>
+            <h2>Zarządzanie Stroną</h2>
+            <div>
+                <button onclick="document.getElementById('seoModal').style.display='block'" style="background:var(--primary-color); margin-right:15px;">Ustawienia SEO/GEO</button>
+                <a href="?logout=1" style="color:#fff; text-decoration:none;">Wyloguj</a>
+            </div>
         </div>
         
         <?php 
@@ -327,8 +355,11 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         
         if(isset($_GET['msg'])) echo '<p style="color:#2ecc71; background: rgba(46,204,113,0.1); padding:10px; border-radius:5px;">'.htmlspecialchars($_GET['msg']).'</p>'; 
         ?>
-
-        <button onclick="openModal('add')">Dodaj Nowy Wpis</button>
+        
+        <div style="margin-bottom: 20px;">
+            <h3>Wpisy Blogowe</h3>
+            <button onclick="openModal('add')">Dodaj Nowy Wpis</button>
+        </div>
         
         <h3 style="margin-top: 40px;">Lista postów</h3>
         <?php 
@@ -396,8 +427,39 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     </div>
                     
                     <div style="margin-top: 30px;">
-                        <button type="submit" onclick="submitForm(event)">Zapisz</button>
+                        <button type="submit" onclick="submitForm(event)">Zapisz Wpis</button>
                         <button type="button" class="btn-danger" onclick="document.getElementById('editorModal').style.display='none'">Anuluj</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Modal SEO -->
+        <div id="seoModal" class="modal">
+            <div class="modal-content">
+                <h3>Globalne Ustawienia SEO & GEO</h3>
+                <form method="POST">
+                    <input type="hidden" name="action" value="save_seo">
+                    <?php $seo_config = file_exists($seo_json) ? json_decode(file_get_contents($seo_json), true) : []; ?>
+                    
+                    <label>Domyślny Tytuł Strony (Meta Title):</label>
+                    <input type="text" name="global_title" value="<?= htmlspecialchars($seo_config['global_title'] ?? '') ?>" required>
+                    
+                    <label>Domyślny Opis Strony (Meta Description):</label>
+                    <textarea name="global_description" style="width:100%; height:100px; background:#222; border:1px solid #444; color:#fff; padding:10px; margin-bottom:15px;"><?= htmlspecialchars($seo_config['global_description'] ?? '') ?></textarea>
+                    
+                    <label>Globalna Nazwa GEO (np. Bolków):</label>
+                    <input type="text" name="geo_placename" value="<?= htmlspecialchars($seo_config['geo_placename'] ?? '') ?>">
+                    
+                    <label>Globalne Koordynaty GEO (np. 50.92, 16.10):</label>
+                    <input type="text" name="geo_position" value="<?= htmlspecialchars($seo_config['geo_position'] ?? '') ?>">
+                    
+                    <label>Globalne Zdjęcie OpenGraph (URL):</label>
+                    <input type="text" name="og_image" value="<?= htmlspecialchars($seo_config['og_image'] ?? '') ?>">
+                    
+                    <div style="margin-top: 20px;">
+                        <button type="submit">Zapisz Ustawienia SEO</button>
+                        <button type="button" class="btn-danger" onclick="document.getElementById('seoModal').style.display='none'">Zamknij</button>
                     </div>
                 </form>
             </div>
