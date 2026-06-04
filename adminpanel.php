@@ -9,12 +9,21 @@ if (!is_dir($data_dir)) {
 }
 
 $admin_json = $data_dir . '/admin.json';
-// Odbudowanie admin.json z domyślnym hasłem, jeśli Git usunął plik
-if (!file_exists($admin_json)) {
-    file_put_contents($admin_json, json_encode(['password_hash' => '$2y$05$xdY9fcy\/5uFF3JJpzZnWdONbR4msbLL6bILiV.FqsFblPsjAPH4IS']));
+$attempts_json = $data_dir . '/login_attempts.json';
+
+// Odbudowanie admin.json z domyślnym hasłem, jeśli Git usunął plik lub hasło uległo uszkodzeniu (slash)
+$needs_fix = true;
+if (file_exists($admin_json)) {
+    $cfg = json_decode(file_get_contents($admin_json), true);
+    if (isset($cfg['password_hash']) && strpos($cfg['password_hash'], '\\/') === false) {
+        $needs_fix = false;
+    }
+}
+if ($needs_fix) {
+    file_put_contents($admin_json, json_encode(['password_hash' => '$2y$05$xdY9fcy/5uFF3JJpzZnWdONbR4msbLL6bILiV.FqsFblPsjAPH4IS']));
+    if (file_exists($attempts_json)) @unlink($attempts_json); // Odblokowanie po błędzie
 }
 
-$attempts_json = $data_dir . '/login_attempts.json';
 $posts_json = $data_dir . '/posts.json';
 $upload_dir = __DIR__ . '/assets/blog/';
 
