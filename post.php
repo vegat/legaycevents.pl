@@ -36,11 +36,18 @@ ob_start(); ?>
     <meta property="og:url" content="<?= $current_url ?>">
     <meta property="og:type" content="article">
     
-    <!-- GEO Tags for Bolków, Dolnośląskie -->
+    <!-- GEO Tags -->
+    <?php 
+    $geo_placename = !empty($post['geo_placename']) ? htmlspecialchars($post['geo_placename']) : 'Bolków';
+    $geo_position_str = !empty($post['geo_position']) ? htmlspecialchars($post['geo_position']) : '50.92, 16.10';
+    $geo_position_parts = array_map('trim', explode(',', $geo_position_str));
+    $geo_lat = $geo_position_parts[0] ?? '50.92';
+    $geo_lon = $geo_position_parts[1] ?? '16.10';
+    ?>
     <meta name="geo.region" content="PL-DS" />
-    <meta name="geo.placename" content="Bolków" />
-    <meta name="geo.position" content="50.92;16.10" />
-    <meta name="ICBM" content="50.92, 16.10" />
+    <meta name="geo.placename" content="<?= $geo_placename ?>" />
+    <meta name="geo.position" content="<?= $geo_lat ?>;<?= $geo_lon ?>" />
+    <meta name="ICBM" content="<?= $geo_position_str ?>" />
     
     <script type="application/ld+json">
     {
@@ -63,14 +70,14 @@ ob_start(); ?>
           "image": "https://<?= $_SERVER['HTTP_HOST'] ?>/assets/Logo/legacyevents_transparent.png",
           "address": {
             "@type": "PostalAddress",
-            "addressLocality": "Bolków",
+            "addressLocality": "<?= $geo_placename ?>",
             "addressRegion": "Dolnośląskie",
             "addressCountry": "PL"
           },
           "geo": {
             "@type": "GeoCoordinates",
-            "latitude": 50.92,
-            "longitude": 16.10
+            "latitude": <?= floatval($geo_lat) ?>,
+            "longitude": <?= floatval($geo_lon) ?>
           },
           "telephone": "780 752 938"
         }
@@ -105,8 +112,8 @@ require_once 'header.php';
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border-color);">
                     <h3 style="font-family: var(--font-heading); color: #fff; margin-bottom: 20px; font-size: 1.5rem;">Galeria zdjęć</h3>
                     <div class="post-gallery">
-                        <?php foreach ($post['gallery'] as $g_img): ?>
-                            <div class="gallery-img-wrapper" onclick="openLightbox('<?= htmlspecialchars($g_img) ?>')">
+                        <?php foreach ($post['gallery'] as $index => $g_img): ?>
+                            <div class="gallery-img-wrapper" onclick="openLightbox(<?= $index ?>)">
                                 <img src="<?= htmlspecialchars($g_img) ?>" alt="Zdjęcie w galerii">
                             </div>
                         <?php endforeach; ?>
@@ -138,18 +145,47 @@ require_once 'header.php';
 .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
 .lightbox img { max-width: 90%; max-height: 90%; border-radius: 5px; object-fit: contain; }
 .lightbox-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; font-weight: bold; }
+.lightbox-prev, .lightbox-next { position: absolute; top: 50%; transform: translateY(-50%); color: white; font-size: 50px; font-weight: bold; cursor: pointer; user-select: none; padding: 20px; transition: 0.3s; }
+.lightbox-prev:hover, .lightbox-next:hover { color: var(--primary-color); }
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
 </style>
 
-<div id="lightbox" class="lightbox" onclick="this.style.display='none'">
-    <span class="lightbox-close">&times;</span>
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <span class="lightbox-prev" onclick="changeImage(-1)">&#10094;</span>
     <img id="lightbox-img" src="">
+    <span class="lightbox-next" onclick="changeImage(1)">&#10095;</span>
 </div>
 
 <script>
-function openLightbox(src) {
-    document.getElementById('lightbox-img').src = src;
+var galleryImages = <?= !empty($post['gallery']) ? json_encode($post['gallery']) : '[]' ?>;
+var currentImageIndex = 0;
+
+function openLightbox(index) {
+    currentImageIndex = index;
+    document.getElementById('lightbox-img').src = galleryImages[currentImageIndex];
     document.getElementById('lightbox').style.display = 'flex';
 }
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+}
+
+function changeImage(direction) {
+    currentImageIndex += direction;
+    if (currentImageIndex >= galleryImages.length) {
+        currentImageIndex = 0;
+    } else if (currentImageIndex < 0) {
+        currentImageIndex = galleryImages.length - 1;
+    }
+    document.getElementById('lightbox-img').src = galleryImages[currentImageIndex];
+}
+
+// Obsługa kliknięcia w tło
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if(e.target === this) closeLightbox();
+});
 </script>
 
 <?php require_once 'footer.php'; ?>

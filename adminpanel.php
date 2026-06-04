@@ -201,7 +201,9 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
             'slug' => slugify($title) . '-' . substr($id, 0, 4),
             'content' => $content,
             'excerpt' => $excerpt,
-            'date' => date('Y-m-d H:i:s'),
+            'date' => !empty($_POST['date']) ? $_POST['date'] : date('Y-m-d H:i:s'),
+            'geo_placename' => !empty($_POST['geo_placename']) ? trim($_POST['geo_placename']) : 'Bolków',
+            'geo_position' => !empty($_POST['geo_position']) ? trim($_POST['geo_position']) : '50.92, 16.10',
             'image' => '',
             'gallery' => []
         ];
@@ -210,7 +212,6 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
             foreach ($posts as &$p) {
                 if ($p['id'] === $id) {
                     $post['image'] = $p['image'] ?? '';
-                    $post['date'] = $p['date'] ?? date('Y-m-d H:i:s');
                     $post['slug'] = $p['slug'] ?? $post['slug'];
                     $post['gallery'] = $p['gallery'] ?? [];
                     break;
@@ -364,7 +365,22 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <label>Tytuł:</label>
                     <input type="text" name="title" id="formTitle" required>
                     
-                    <label>Zdjęcie / Miniatura (zostanie automatycznie docięte do 16:9):</label>
+                    <div style="display:flex; gap:15px; margin-top:10px;">
+                        <div style="flex:1;">
+                            <label>Data publikacji:</label>
+                            <input type="text" name="date" id="formDate" placeholder="YYYY-MM-DD HH:MM:SS">
+                        </div>
+                        <div style="flex:1;">
+                            <label>GEO Nazwa (np. Bolków):</label>
+                            <input type="text" name="geo_placename" id="formGeoName" placeholder="Opcjonalnie (domyślnie Bolków)">
+                        </div>
+                        <div style="flex:1;">
+                            <label>GEO Koordynaty (np. 50.92, 16.10):</label>
+                            <input type="text" name="geo_position" id="formGeoPos" placeholder="Opcjonalnie">
+                        </div>
+                    </div>
+                    
+                    <label style="margin-top:15px; display:block;">Zdjęcie / Miniatura (zostanie automatycznie docięte do 16:9):</label>
                     <input type="file" name="image" accept="image/*" id="formImage">
                     
                     <label>Treść wpisu:</label>
@@ -416,6 +432,9 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     if(post) {
                         document.getElementById('formId').value = post.id;
                         document.getElementById('formTitle').value = post.title;
+                        document.getElementById('formDate').value = post.date || '';
+                        document.getElementById('formGeoName').value = post.geo_placename || 'Bolków';
+                        document.getElementById('formGeoPos').value = post.geo_position || '50.92, 16.10';
                         quill.root.innerHTML = post.content;
                         document.getElementById('formImage').required = false;
                         
@@ -433,6 +452,9 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                 } else {
                     document.getElementById('formId').value = '';
                     document.getElementById('formTitle').value = '';
+                    document.getElementById('formDate').value = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                    document.getElementById('formGeoName').value = 'Bolków';
+                    document.getElementById('formGeoPos').value = '50.92, 16.10';
                     quill.root.innerHTML = '';
                     document.getElementById('formImage').required = true;
                     document.getElementById('existingGallery').innerHTML = '';
