@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegacyEvents - Tworzymy światy, nie tylko eventy - Eventy, Pokazy Świetlne, Videomapping</title>
+    <title><?= $seo_title ?? 'LegacyEvents - Tworzymy światy, nie tylko eventy - Eventy, Pokazy Świetlne, Videomapping' ?></title>
+    <?php if (isset($seo_description)): ?>
+    <meta name="description" content="<?= htmlspecialchars($seo_description) ?>">
+    <?php endif; ?>
+    <?php if (isset($seo_tags)): ?>
+    <?= $seo_tags ?>
+    <?php endif; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
