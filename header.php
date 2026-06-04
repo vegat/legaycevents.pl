@@ -23,6 +23,19 @@
             echo '<link rel="preload" as="image" href="' . htmlspecialchars($imgUrl) . '">';
         }
     }
+    
+    // Zabezpieczenie danych bloga przed nadpisaniem przez Git Pull
+    $posts_file = __DIR__ . '/data/posts.json';
+    $backup_file = __DIR__ . '/data/posts_backup.json';
+    if (file_exists($posts_file)) {
+        $content = file_get_contents($posts_file);
+        if (strlen($content) > 5) { // Jeśli plik nie jest pusty/pustą tablicą
+            file_put_contents($backup_file, $content);
+        }
+    } elseif (file_exists($backup_file)) {
+        // Przywracanie, jeśli Git skasował oryginalny plik podczas aktualizacji
+        copy($backup_file, $posts_file);
+    }
     ?>
 </head>
 
