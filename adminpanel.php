@@ -1,4 +1,6 @@
 <?php
+ini_set('memory_limit', '1024M');
+ini_set('max_execution_time', '300');
 session_start();
 
 $admin_json = __DIR__ . '/data/admin.json';
@@ -297,7 +299,14 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
             <a href="?logout=1" style="color:#fff; text-decoration:none;">Wyloguj</a>
         </div>
         
-        <?php if(isset($_GET['msg'])) echo '<p style="color:#2ecc71;">'.htmlspecialchars($_GET['msg']).'</p>'; ?>
+        <?php 
+        // Detekcja przekroczenia limitu post_max_size
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+            echo '<p style="color:#e74c3c; background: rgba(231,76,60,0.1); padding:10px; border-radius:5px;">Błąd: Przekroczono limit serwera dla wielkości jednorazowo wgrywanych plików (waga wszystkich zdjęć naraz jest zbyt duża). Spróbuj wgrać mniejszą ilość zdjęć na raz.</p>';
+        }
+        
+        if(isset($_GET['msg'])) echo '<p style="color:#2ecc71; background: rgba(46,204,113,0.1); padding:10px; border-radius:5px;">'.htmlspecialchars($_GET['msg']).'</p>'; 
+        ?>
 
         <button onclick="openModal('add')">Dodaj Nowy Wpis</button>
         
