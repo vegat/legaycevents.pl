@@ -38,6 +38,9 @@
                 <li><a href="galeria"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Galeria</a>
                 </li>
+                <li><a href="blog"
+                        style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Blog</a>
+                </li>
                 <li><a href="wspolpracujemy"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Współpracujemy</a>
                 </li>
