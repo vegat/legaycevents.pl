@@ -1,3 +1,10 @@
+Options -MultiViews
 RewriteEngine On
+
+# Zabezpieczenie przed przepisywaniem istniejących katalogów
+RewriteCond %{REQUEST_FILENAME} !-d
+# Zabezpieczenie przed przepisywaniem istniejących plików
 RewriteCond %{REQUEST_FILENAME} !-f
+
+# Przepisywanie adresów bez rozszerzenia na pliki .php
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
