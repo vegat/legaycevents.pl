@@ -44,6 +44,7 @@
                     </li>
                     <li><a href="galeria">Galeria</a></li>
                     <li><a href="wspolpracujemy">Współpracujemy</a></li>
+                    <li><a href="https://widget.legacyevents.pl/uslugi" target="_blank">Konfigurator z cennikiem</a></li>
                     <li><a href="kontakt">Kontakt</a></li>
                 </ul>
             </nav>

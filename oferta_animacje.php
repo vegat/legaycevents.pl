@@ -77,7 +77,10 @@ $cat = $oferta_config['animacje'];
                 wydarzenia</span>.</p>
 
         <div style="margin-top: 60px; text-align: center;">
-            <a href="kontakt" class="cta-button primary">Opowiedz nam o swoim evencie – dopasujemy animacje</a>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="kontakt" class="cta-button primary">Opowiedz nam o swoim evencie – dopasujemy animacje</a>
+                <a href="https://widget.legacyevents.pl/uslugi" target="_blank" class="cta-button primary">KONFIGURATOR USŁUG Z CENNIKIEM</a>
+            </div>
         </div>
     </section>
 </main>
