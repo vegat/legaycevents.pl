@@ -3,9 +3,19 @@ ini_set('memory_limit', '1024M');
 ini_set('max_execution_time', '300');
 session_start();
 
-$admin_json = __DIR__ . '/data/admin.json';
-$attempts_json = __DIR__ . '/data/login_attempts.json';
-$posts_json = __DIR__ . '/data/posts.json';
+$data_dir = __DIR__ . '/data';
+if (!is_dir($data_dir)) {
+    @mkdir($data_dir, 0755, true);
+}
+
+$admin_json = $data_dir . '/admin.json';
+// Odbudowanie admin.json z domyślnym hasłem, jeśli Git usunął plik
+if (!file_exists($admin_json)) {
+    file_put_contents($admin_json, json_encode(['password_hash' => '$2y$05$xdY9fcy\/5uFF3JJpzZnWdONbR4msbLL6bILiV.FqsFblPsjAPH4IS']));
+}
+
+$attempts_json = $data_dir . '/login_attempts.json';
+$posts_json = $data_dir . '/posts.json';
 $upload_dir = __DIR__ . '/assets/blog/';
 
 // --- Anti-bruteforce ---
