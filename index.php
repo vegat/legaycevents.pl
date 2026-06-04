@@ -85,10 +85,8 @@ require_once 'header.php';
 
     <!-- Full Width Feature Image & Upcoming Event Box -->
     <?php
-    // Zmienna z zewnętrznym URL do pliku JSON z danymi wydarzenia
-    $event_json_url = 'https://raw.githubusercontent.com/vegat/legacyconfig/refs/heads/main/LegacyNextEvent.json';
-    $cache_file = __DIR__ . '/upcoming_event_cache.json';
-    $cache_time = 86400; // 24h w sekundach
+    // Wczytanie lokalnego pliku JSON z danymi wydarzenia
+    $local_json_file = __DIR__ . '/LegacyNextEvent.json';
 
     // Zmienne domyślne dla stanu błędu - fallback na obecny wygląd (Wkrótce)
     $upcoming_event = [
@@ -103,26 +101,11 @@ require_once 'header.php';
     $fetched_event = null;
     $is_active_event = false;
 
-    // Sprawdzenie czy cache istnieje i czy jest wazny (ponizej 24h)
-    if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
-        $json_data = file_get_contents($cache_file);
+    // Odczyt z lokalnego pliku
+    if (file_exists($local_json_file)) {
+        $json_data = file_get_contents($local_json_file);
         if ($json_data !== false) {
             $fetched_event = json_decode($json_data, true);
-        }
-    } else {
-        // Pobieranie nowych danych z URL jeśli cache wygasł
-        $context = stream_context_create(['http' => ['timeout' => 5]]);
-        $json_data = @file_get_contents($event_json_url, false, $context);
-        
-        if ($json_data !== false) {
-            $parsed = json_decode($json_data, true);
-            if ($parsed !== null) {
-                file_put_contents($cache_file, $json_data);
-                $fetched_event = $parsed;
-            }
-        } elseif (file_exists($cache_file)) {
-            // W razie błędu serwera JSON, zaczytanie ostatniego dobrego cache, nawet jeśli jest stary
-            $fetched_event = json_decode(file_get_contents($cache_file), true);
         }
     }
 
