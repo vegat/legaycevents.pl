@@ -35,6 +35,24 @@ if (!file_exists($seo_json)) {
     ], JSON_PRETTY_PRINT));
 }
 
+$pages_seo_file = $data_dir . '/pages_seo.json';
+if (!file_exists($pages_seo_file)) {
+    $default_pages_seo = [
+        'index.php' => ['title' => 'Strona Główna - Agencja Eventowa LegacyEvents', 'desc' => 'Agencja LegacyEvents to profesjonalna organizacja wydarzeń, koncertów i pokazów. Wkrocz w świat zaawansowanej scenotechniki i zorganizuj wymarzony event.'],
+        'oferta.php' => ['title' => 'Pełna Oferta - Technika, Wynajem, Animacje', 'desc' => 'Odkryj potężny arsenał możliwości LegacyEvents. Wynajem sprzętu, nagłośnienie, oświetlenie, animacje i technika estradowa.'],
+        'oferta_animacje.php' => ['title' => 'Animacje i Kostiumy | Atrakcje na event', 'desc' => 'Zaczaruj swój event z LegacyEvents! Wynajem przepięknych kostiumów i profesjonalne animacje dla dzieci i dorosłych.'],
+        'oferta_koncerty.php' => ['title' => 'Realizacja Koncertów | Obsługa Techniczna', 'desc' => 'Krystalicznie czysty dźwięk i oszałamiające efekty świetlne. Kompleksowa realizacja techniczna koncertów plenerowych, klubowych i festiwali.'],
+        'oferta_rental.php' => ['title' => 'Wynajem Sprzętu Eventowego', 'desc' => 'Profesjonalny rental sprzętu eventowego. Oferujemy nowoczesne nagłośnienie, oświetlenie, konstrukcje sceniczne i lasery.'],
+        'oferta_technika.php' => ['title' => 'Technika Sceniczna i Światła', 'desc' => 'Potężne nagłośnienie i widowiskowe światła. Zaufaj specjalistom z LegacyEvents i wykorzystaj bezkompromisową technikę sceniczną.'],
+        'oferta_wydarzenia.php' => ['title' => 'Organizacja Wydarzeń i Eventów', 'desc' => 'Kompleksowo prowadzimy wydarzenia korporacyjne, festyny, eventy promocyjne i masowe od pierwszego szkicu aż po wielki finał.'],
+        'oferta_zamki.php' => ['title' => 'Dmuchane Zamki i Zjeżdżalnie na Wynajem', 'desc' => 'Rozkręć każdą imprezę plenerową! Wypożycz ogromne dmuchane zamki, potężne zjeżdżalnie i kolorowe atrakcje dla dzieci.'],
+        'kontakt.php' => ['title' => 'Kontakt z LegacyEvents', 'desc' => 'Masz pomysł na spektakularny event? Skontaktuj się z agencją LegacyEvents! Szybka darmowa wycena i doradztwo techniczne.'],
+        'galeria.php' => ['title' => 'Galeria Realizacji Eventowych', 'desc' => 'Obrazy mówią więcej niż tysiąc słów. Zobacz zjawiskowe zdjęcia z naszych dotychczasowych realizacji, pokazów i koncertów.'],
+        'wspolpracujemy.php' => ['title' => 'Nasi Partnerzy', 'desc' => 'Poznaj zaufane marki i profesjonalistów, z którymi LegacyEvents współtworzy największe widowiska na terenie całej Polski.']
+    ];
+    file_put_contents($pages_seo_file, json_encode($default_pages_seo, JSON_PRETTY_PRINT));
+}
+
 $posts_json = $data_dir . '/posts.json';
 $upload_dir = __DIR__ . '/assets/blog/';
 
@@ -503,10 +521,28 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                 <form method="POST">
                     <input type="hidden" name="action" value="save_subpage_seo">
                     <?php 
-                    $pages_seo_file = $data_dir . '/pages_seo.json';
-                    $pages_seo = file_exists($pages_seo_file) ? json_decode(file_get_contents($pages_seo_file), true) : [];
+                    $pages_seo_file = __DIR__ . '/data/pages_seo.json';
+                    $pages_seo = [];
+                    if (file_exists($pages_seo_file)) {
+                        $json_content = file_get_contents($pages_seo_file);
+                        $decoded = json_decode($json_content, true);
+                        if (is_array($decoded)) {
+                            $pages_seo = $decoded;
+                        } else {
+                            // Awaryjne logowanie jeśli JSON jest uszkodzony
+                            error_log("Błąd dekodowania JSON: " . json_last_error_msg());
+                        }
+                    }
                     ?>
                     <label>Wybierz podstronę do edycji:</label>
+                    <?php if (empty($pages_seo)): ?>
+                        <div style="background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; color: #fff; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                            <strong>Błąd krytyczny z plikiem bazy!</strong><br>
+                            Ścieżka: <?= $pages_seo_file ?><br>
+                            Czy istnieje na serwerze: <?= file_exists($pages_seo_file) ? 'TAK' : 'NIE' ?><br>
+                            Błąd JSON: <?= json_last_error_msg() ?>
+                        </div>
+                    <?php endif; ?>
                     <select name="page_id" id="subpageSelect" onchange="updateSubpageSeoForm()" style="width:100%; padding:10px; margin-bottom:15px; background:#222; color:#fff; border:1px solid #444; border-radius:5px;">
                         <option value="">-- Wybierz --</option>
                         <?php foreach($pages_seo as $file => $data): ?>
