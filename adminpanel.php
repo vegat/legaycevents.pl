@@ -114,6 +114,54 @@ function processImage($file, $upload_dir) {
     return 'assets/blog/' . $filename;
 }
 
+function processGalleryImage($tmp_name, $mime, $upload_dir) {
+    if (!file_exists($tmp_name)) return null;
+    
+    switch ($mime) {
+        case 'image/jpeg': $img = imagecreatefromjpeg($tmp_name); break;
+        case 'image/png': $img = imagecreatefrompng($tmp_name); break;
+        case 'image/webp': $img = imagecreatefromwebp($tmp_name); break;
+        default: return null;
+    }
+    
+    $width = imagesx($img);
+    $height = imagesy($img);
+    
+    // Scale down if larger than 1920px
+    $max_dim = 1920;
+    if ($width > $max_dim || $height > $max_dim) {
+        if ($width > $height) {
+            $new_width = $max_dim;
+            $new_height = ($max_dim / $width) * $height;
+        } else {
+            $new_height = $max_dim;
+            $new_width = ($max_dim / $height) * $width;
+        }
+    } else {
+        $new_width = $width;
+        $new_height = $height;
+    }
+    
+    $new_img = imagecreatetruecolor((int)$new_width, (int)$new_height);
+    if ($mime == 'image/png' || $mime == 'image/webp') {
+        imagealphablending($new_img, false);
+        imagesavealpha($new_img, true);
+        $transparent = imagecolorallocatealpha($new_img, 255, 255, 255, 127);
+        imagefilledrectangle($new_img, 0, 0, (int)$new_width, (int)$new_height, $transparent);
+    }
+    
+    imagecopyresampled($new_img, $img, 0, 0, 0, 0, (int)$new_width, (int)$new_height, $width, $height);
+    
+    $filename = uniqid('gallery_') . '.webp';
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+    imagewebp($new_img, $upload_dir . $filename, 85);
+    
+    imagedestroy($img);
+    imagedestroy($new_img);
+    
+    return 'assets/blog/' . $filename;
+}
+
 // --- CRUD Actions ---
 if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $posts = file_exists($posts_json) ? json_decode(file_get_contents($posts_json), true) : [];
@@ -133,7 +181,8 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
             'content' => $content,
             'excerpt' => $excerpt,
             'date' => date('Y-m-d H:i:s'),
-            'image' => ''
+            'image' => '',
+            'gallery' => []
         ];
         
         if ($_POST['action'] === 'edit') {
@@ -142,15 +191,39 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     $post['image'] = $p['image'] ?? '';
                     $post['date'] = $p['date'] ?? date('Y-m-d H:i:s');
                     $post['slug'] = $p['slug'] ?? $post['slug'];
+                    $post['gallery'] = $p['gallery'] ?? [];
                     break;
                 }
             }
+        }
+        
+        // Handle gallery deletions
+        if (isset($_POST['delete_gallery']) && is_array($_POST['delete_gallery'])) {
+            $post['gallery'] = array_filter($post['gallery'], function($img) {
+                return !in_array($img, $_POST['delete_gallery']);
+            });
+            $post['gallery'] = array_values($post['gallery']);
         }
         
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $uploaded_image = processImage($_FILES['image'], $upload_dir);
             if ($uploaded_image) {
                 $post['image'] = $uploaded_image;
+            }
+        }
+        
+        // Process new gallery uploads
+        if (isset($_FILES['gallery_images'])) {
+            $file_count = count($_FILES['gallery_images']['name']);
+            for ($i = 0; $i < $file_count; $i++) {
+                if ($_FILES['gallery_images']['error'][$i] === UPLOAD_ERR_OK) {
+                    $tmp_name = $_FILES['gallery_images']['tmp_name'][$i];
+                    $mime = $_FILES['gallery_images']['type'][$i];
+                    $processed = processGalleryImage($tmp_name, $mime, $upload_dir);
+                    if ($processed) {
+                        $post['gallery'][] = $processed;
+                    }
+                }
             }
         }
         
@@ -200,8 +273,12 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .btn-danger { background: #e74c3c; }
         .btn-danger:hover { background: #c0392b; }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); padding:50px; box-sizing: border-box; overflow-y: auto;}
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); padding:50px; box-sizing: border-box; overflow-y: auto; z-index: 999;}
         .modal-content { background: #1a1a24; padding: 30px; max-width: 800px; margin: 0 auto; border-radius: 10px; border: 1px solid #444;}
+        .gallery-preview { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .gallery-preview-item { position: relative; width: 100px; height: 100px; border-radius: 5px; overflow: hidden; border: 1px solid #444;}
+        .gallery-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-preview-item label { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(231, 76, 60, 0.9); color: white; text-align: center; font-size: 0.8rem; padding: 2px 0; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -268,8 +345,16 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     </div>
                     <textarea name="content" id="formContent" style="display:none;"></textarea>
                     
-                    <button type="submit" onclick="submitForm(event)">Zapisz</button>
-                    <button type="button" class="btn-danger" onclick="document.getElementById('editorModal').style.display='none'">Anuluj</button>
+                    <div style="margin-top:20px; padding-top:20px; border-top:1px solid #333;">
+                        <label>Zdjęcia do galerii pod postem (można zaznaczyć wiele):</label>
+                        <input type="file" name="gallery_images[]" accept="image/*" multiple id="formGallery">
+                        <div id="existingGallery" class="gallery-preview"></div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button type="submit" onclick="submitForm(event)">Zapisz</button>
+                        <button type="button" class="btn-danger" onclick="document.getElementById('editorModal').style.display='none'">Anuluj</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -305,12 +390,24 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                         document.getElementById('formTitle').value = post.title;
                         quill.root.innerHTML = post.content;
                         document.getElementById('formImage').required = false;
+                        
+                        var galleryHtml = '';
+                        if(post.gallery && post.gallery.length > 0) {
+                            post.gallery.forEach(function(img) {
+                                galleryHtml += '<div class="gallery-preview-item">';
+                                galleryHtml += '<img src="'+img+'" alt="gallery image">';
+                                galleryHtml += '<label><input type="checkbox" name="delete_gallery[]" value="'+img+'"> Usuń</label>';
+                                galleryHtml += '</div>';
+                            });
+                        }
+                        document.getElementById('existingGallery').innerHTML = galleryHtml;
                     }
                 } else {
                     document.getElementById('formId').value = '';
                     document.getElementById('formTitle').value = '';
                     quill.root.innerHTML = '';
                     document.getElementById('formImage').required = true;
+                    document.getElementById('existingGallery').innerHTML = '';
                 }
             }
 

@@ -100,6 +100,19 @@ require_once 'header.php';
             <div class="blog-content" style="font-size: 1.1rem; line-height: 1.8; color: #eee;">
                 <?= $post['content'] ?> <!-- Treść HTML zapisana z edytora Quill -->
             </div>
+            
+            <?php if (!empty($post['gallery'])): ?>
+                <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border-color);">
+                    <h3 style="font-family: var(--font-heading); color: #fff; margin-bottom: 20px; font-size: 1.5rem;">Galeria zdjęć</h3>
+                    <div class="post-gallery">
+                        <?php foreach ($post['gallery'] as $g_img): ?>
+                            <div class="gallery-img-wrapper" onclick="openLightbox('<?= htmlspecialchars($g_img) ?>')">
+                                <img src="<?= htmlspecialchars($g_img) ?>" alt="Zdjęcie w galerii">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </article>
         
         <div style="margin-top: 50px; text-align: center;">
@@ -114,6 +127,29 @@ require_once 'header.php';
 .blog-content a { color: var(--primary-color); text-decoration: underline; }
 .blog-content blockquote { border-left: 4px solid var(--primary-color); padding-left: 20px; color: #bbb; font-style: italic; margin: 20px 0;}
 .blog-content p { margin-bottom: 20px; }
+
+/* Galeria */
+.post-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+.gallery-img-wrapper { aspect-ratio: 1; overflow: hidden; border-radius: 8px; cursor: pointer; border: 1px solid transparent; transition: all 0.3s;}
+.gallery-img-wrapper:hover { transform: scale(1.03); border-color: var(--primary-color); }
+.gallery-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Lightbox */
+.lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+.lightbox img { max-width: 90%; max-height: 90%; border-radius: 5px; object-fit: contain; }
+.lightbox-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; font-weight: bold; }
 </style>
+
+<div id="lightbox" class="lightbox" onclick="this.style.display='none'">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="">
+</div>
+
+<script>
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').style.display = 'flex';
+}
+</script>
 
 <?php require_once 'footer.php'; ?>
