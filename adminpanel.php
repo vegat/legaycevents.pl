@@ -38,7 +38,7 @@ if (!file_exists($seo_json)) {
 $pages_seo_file = $data_dir . '/pages_seo.json';
 if (!file_exists($pages_seo_file)) {
     $default_pages_seo = [
-        'index.php' => ['title' => 'Strona Główna - Agencja Eventowa LegacyEvents', 'desc' => 'Agencja LegacyEvents to profesjonalna organizacja wydarzeń, koncertów i pokazów. Wkrocz w świat zaawansowanej scenotechniki i zorganizuj wymarzony event.'],
+        'index.php' => ['title' => 'LegacyEvents - Tworzymy światy, nie tylko eventy', 'desc' => 'Tworzymy niesamowite wydarzenia, koncerty, eventy firmowe oraz pokazy sceniczne. Poznaj możliwości agencji LegacyEvents na Dolnym Śląsku.'],
         'oferta.php' => ['title' => 'Pełna Oferta - Technika, Wynajem, Animacje', 'desc' => 'Odkryj potężny arsenał możliwości LegacyEvents. Wynajem sprzętu, nagłośnienie, oświetlenie, animacje i technika estradowa.'],
         'oferta_animacje.php' => ['title' => 'Animacje i Kostiumy | Atrakcje na event', 'desc' => 'Zaczaruj swój event z LegacyEvents! Wynajem przepięknych kostiumów i profesjonalne animacje dla dzieci i dorosłych.'],
         'oferta_koncerty.php' => ['title' => 'Realizacja Koncertów | Obsługa Techniczna', 'desc' => 'Krystalicznie czysty dźwięk i oszałamiające efekty świetlne. Kompleksowa realizacja techniczna koncertów plenerowych, klubowych i festiwali.'],
