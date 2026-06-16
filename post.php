@@ -85,9 +85,13 @@ require_once 'header.php';
 
     <section class="content-section" style="max-width: 800px; margin: 0 auto; padding: 20px;">
         <article style="background: var(--card-bg); border-radius: 12px; overflow: hidden; padding: 30px; border: 1px solid var(--border-color);">
-            <?php if (!empty($post['image'])): ?>
+            <?php if (!empty($post['image'])): 
+                $main_img = $post['image'];
+                $alt = !empty($graphics_seo[$main_img]['alt']) ? htmlspecialchars($graphics_seo[$main_img]['alt']) : htmlspecialchars($post['title']);
+                $title_attr = !empty($graphics_seo[$main_img]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$main_img]['title']) . '"' : '';
+            ?>
                 <div style="margin-bottom: 30px; border-radius: 8px; overflow: hidden;">
-                    <img src="<?= htmlspecialchars($post['image']) ?>" alt="<?= htmlspecialchars($post['title']) ?>" style="width: 100%; height: auto; display: block;">
+                    <img src="<?= htmlspecialchars($main_img) ?>" alt="<?= $alt ?>" <?= $title_attr ?> style="width: 100%; height: auto; display: block;">
                 </div>
             <?php endif; ?>
             
@@ -99,9 +103,12 @@ require_once 'header.php';
                 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border-color);">
                     <h3 style="font-family: var(--font-heading); color: #fff; margin-bottom: 20px; font-size: 1.5rem;">Galeria zdjęć</h3>
                     <div class="post-gallery">
-                        <?php foreach ($post['gallery'] as $index => $g_img): ?>
+                        <?php foreach ($post['gallery'] as $index => $g_img): 
+                            $alt = !empty($graphics_seo[$g_img]['alt']) ? htmlspecialchars($graphics_seo[$g_img]['alt']) : htmlspecialchars($post['title']) . " - Galeria";
+                            $title_attr = !empty($graphics_seo[$g_img]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$g_img]['title']) . '"' : '';
+                        ?>
                             <div class="gallery-img-wrapper" onclick="openLightbox(<?= $index ?>)">
-                                <img src="<?= htmlspecialchars($g_img) ?>" alt="Zdjęcie w galerii">
+                                <img src="<?= htmlspecialchars($g_img) ?>" alt="<?= $alt ?>" <?= $title_attr ?>>
                             </div>
                         <?php endforeach; ?>
                     </div>

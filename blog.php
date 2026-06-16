@@ -26,8 +26,11 @@ $seo_description = "Najnowsze wpisy, aktualności, porady i relacje ze świata e
                 echo '<article style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: transform 0.3s; display:flex; flex-direction:column;" onmouseover="this.style.transform=\'translateY(-5px)\'; this.style.borderColor=\'var(--primary-color)\'" onmouseout="this.style.transform=\'translateY(0)\'; this.style.borderColor=\'var(--border-color)\'">';
                 echo '<a href="post?slug=' . htmlspecialchars($post['slug']) . '" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; flex-grow:1;">';
                 
+                $alt = !empty($graphics_seo[$img]['alt']) ? htmlspecialchars($graphics_seo[$img]['alt']) : htmlspecialchars($post['title']);
+                $title_attr = !empty($graphics_seo[$img]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$img]['title']) . '"' : '';
+
                 echo '<div style="height: 200px; overflow: hidden;">';
-                echo '<img src="' . htmlspecialchars($img) . '" alt="Blog Image" style="width: 100%; height: 100%; object-fit: cover;">';
+                echo '<img src="' . htmlspecialchars($img) . '" alt="' . $alt . '" ' . $title_attr . ' style="width: 100%; height: 100%; object-fit: cover;">';
                 echo '</div>';
                 
                 echo '<div style="padding: 25px; display:flex; flex-direction:column; flex-grow:1;">';

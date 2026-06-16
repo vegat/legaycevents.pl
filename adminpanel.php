@@ -653,8 +653,10 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                             $graphics_seo = file_exists($graphics_seo_file) ? json_decode(file_get_contents($graphics_seo_file), true) : [];
                             if (!is_array($graphics_seo)) $graphics_seo = [];
                             
-                            $all_images = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
-                            if ($all_images): 
+                            $event_photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                            $blog_photos = glob('assets/blog/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                            $all_images = array_merge(is_array($event_photos) ? $event_photos : [], is_array($blog_photos) ? $blog_photos : []);
+                            if (!empty($all_images)): 
                                 foreach ($all_images as $img_path):
                                     $encoded_path = htmlspecialchars($img_path);
                                     $alt = $graphics_seo[$img_path]['alt'] ?? '';
@@ -679,7 +681,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                             <?php 
                                 endforeach; 
                             else: 
-                                echo '<p>Brak zdjęć w galerii EventPhotos.</p>';
+                                echo '<p>Brak zdjęć w galeriach EventPhotos i blog.</p>';
                             endif; 
                             ?>
                         </div>
