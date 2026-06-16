@@ -6,5 +6,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # Zabezpieczenie przed przepisywaniem istniejących plików
 RewriteCond %{REQUEST_FILENAME} !-f
 
+# Przekierowanie dla sitemap
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
 # Przepisywanie adresów bez rozszerzenia na pliki .php
 RewriteRule ^([^\.]+)$ $1.php [NC,L]

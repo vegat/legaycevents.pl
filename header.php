@@ -50,6 +50,7 @@
     $current_url = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     ?>
     <title><?= htmlspecialchars($final_title) ?></title>
+    <link rel="canonical" href="<?= htmlspecialchars($current_url) ?>" />
     <?php if (!empty($final_desc)): ?>
     <meta name="description" content="<?= htmlspecialchars($final_desc) ?>">
     <?php endif; ?>
