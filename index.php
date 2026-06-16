@@ -262,7 +262,7 @@ require_once 'header.php';
 
     <!-- Testimonials Section -->
     <section class="testimonials-section" style="padding: 100px 20px; background: rgba(10, 10, 15, 0.8);">
-        <h2 class="section-title">Zaufały nam <span class="magical-text">dziesiątki</span> firm i instytucji</h2>
+        <h2 class="section-title">Dziesiątki tysięcy <span class="magical-text">zadowolonych uczestników</span> wydarzeń</h2>
         <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto 40px; text-align: center; font-size: 1.1rem;">
             Dołącz do grona zadowolonych organizatorów. Oto co mówią o nas klienci, z którymi mieliśmy zaszczyt współpracować.
         </p>
