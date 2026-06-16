@@ -264,26 +264,26 @@ require_once 'header.php';
     <section class="testimonials-section" style="padding: 100px 20px; background: rgba(10, 10, 15, 0.8);">
         <h2 class="section-title">Dziesiątki tysięcy <span class="magical-text">zadowolonych uczestników</span> wydarzeń</h2>
         <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto 40px; text-align: center; font-size: 1.1rem;">
-            Dołącz do grona zadowolonych organizatorów. Oto co mówią o nas klienci, z którymi mieliśmy zaszczyt współpracować.
+            Zamiast o sobie opowiadać, woleliśmy oddać głos tym, dla których to wszystko tworzymy. Zobacz, jak nasze wydarzenia oceniają sami uczestnicy.
         </p>
         <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
             <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
                 <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
-                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Pełen profesjonalizm i niesamowite podejście do detali. Nasz event firmowy we Wrocławiu przebiegł bez najmniejszych zakłóceń. Pełna gwarancja bezpieczeństwa i spokoju ducha. Gorąco polecamy, jeśli zależy Ci na jakości!</p>
-                <div style="font-weight: bold; color: #fff;">Anna K.</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">Dyrektor HR</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Niesamowity festiwal! Oprawa wizualna, neony i potężne nagłośnienie to był absolutny kosmos. Nigdy wcześniej nie widziałem zamku w takim wydaniu. Zdecydowanie najlepsza impreza, na jakiej byłem w tym roku!</p>
+                <div style="font-weight: bold; color: #fff;">Michał S.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Uczestnik Festiwalu</div>
             </div>
             <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
                 <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
-                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Jako gmina szukaliśmy kogoś, kto zajmie się logistyką od A do Z. Ekipa przyjechała, rozstawiła scenę i ogarnęła całą technikę. Szybko, terminowo i bardzo bezpiecznie. Zaoszczędziliśmy mnóstwo stresu i pieniędzy.</p>
-                <div style="font-weight: bold; color: #fff;">Piotr W.</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">Wydział Promocji Gminy</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Byliśmy całą rodziną i animacje przerosły nasze oczekiwania. Aktorzy genialnie wcielali się w swoje role, a cała scenografia sprawiła, że naprawdę przenieśliśmy się do innego świata. Dzieci wróciły zachwycone!</p>
+                <div style="font-weight: bold; color: #fff;">Karolina T.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Uczestniczka Akademii Magii</div>
             </div>
             <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
                 <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
-                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Immersyjne gry terenowe, które stworzyli dla nas na zamku, to był absolutny hit! Goście byli zachwyceni. Jako jedna z nielicznych firm w Polsce mają tak unikalny i innowacyjny produkt edukacyjny. To wyższy poziom rozrywki.</p>
-                <div style="font-weight: bold; color: #fff;">Katarzyna M.</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">Manager Obiektu Historycznego</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Immersyjna gra terenowa to był strzał w dziesiątkę! Masa zagadek, fantastyczni prowadzący i rewelacyjny, mroczny klimat. Cała nasza ekipa bawiła się znakomicie. Na pewno wrócimy na kolejne edycje.</p>
+                <div style="font-weight: bold; color: #fff;">Tomasz K.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Gracz Terenowy</div>
             </div>
         </div>
     </section>
