@@ -47,6 +47,9 @@
                 <li><a href="kontakt"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Kontakt</a>
                 </li>
+                <li><a href="polityka_prywatnosci"
+                        style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s; font-size: 0.9em; opacity: 0.7;">Polityka Prywatności</a>
+                </li>
             </ul>
         </div>
 

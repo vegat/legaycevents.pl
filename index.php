@@ -34,13 +34,12 @@ require_once 'header.php';
         <div class="hero-background-glow"></div>
         <div class="hero-content">
             <h1 class="hero-title">
-                Tworzymy <br>
+                Zorganizuj <br>
                 <div class="magical-text-wrapper"><span id="animated-word"
-                        class="magical-text word-visible">IMMERSYJNE</span></div> <br>
-                Światy.
+                        class="magical-text word-visible">NIEZAPOMNIANE</span></div> <br>
+                Wydarzenie.
             </h1>
-            <p class="hero-subtitle">Nasze wydarzenia nie są tylko do patrzenia - są to doświadczenia. Daj się porwać
-                kreatywnym światom, które sprowadzamy na najciekawsze lokalizacje w Polsce.</p>
+            <p class="hero-subtitle">Twoi goście zasługują na coś więcej niż zwykły event. Otrzymujesz od nas pełną gwarancję niesamowitych wrażeń, absolutne bezpieczeństwo i profesjonalną organizację w najciekawszych lokalizacjach w Polsce.</p>
             <div class="hero-buttons">
                 <a href="oferta" class="cta-button primary">Odkryj Naszą Ofertę</a>
                 <a href="kontakt" class="cta-button secondary">Skontaktuj się</a>
@@ -231,13 +230,71 @@ require_once 'header.php';
         </div>
     </section>
 
+    <!-- Nasze Usługi Section -->
+    <section class="services-section" style="padding: 100px 20px; text-align: center;">
+        <h2 class="section-title">Poznaj nasze <span class="magical-text">możliwości</span></h2>
+        <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto 40px; font-size: 1.1rem;">
+            Zyskujesz nie tylko sprzęt, ale pełne zaplecze techniczne i artystyczne. Wypróbuj nasze rozwiązania i przekonaj się, jak ułatwiamy organizację, oszczędzając Twój czas i gwarantując bezproblemowy przebieg każdej imprezy.
+        </p>
+        <div class="services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+            <a href="oferta_wydarzenia" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Wydarzenia</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Kompleksowa, kreatywna organizacja eventów od A do Z.</p>
+            </a>
+            <a href="oferta_technika" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Technika</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Niezawodne sceny, światło i potężne nagłośnienie.</p>
+            </a>
+            <a href="oferta_animacje" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Animacje</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Profesjonalne atrakcje dla najmłodszych i całych rodzin.</p>
+            </a>
+            <a href="oferta_rental" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Rental</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Szybki wynajem namiotów, krzeseł i sprzętu na Twój event.</p>
+            </a>
+            <a href="oferta_koncerty" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Koncerty</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Spektakularne realizacje sceniczne dla tysięcy uczestników.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" style="padding: 100px 20px; background: rgba(10, 10, 15, 0.8);">
+        <h2 class="section-title">Zaufały nam <span class="magical-text">dziesiątki</span> firm i instytucji</h2>
+        <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto 40px; text-align: center; font-size: 1.1rem;">
+            Dołącz do grona zadowolonych organizatorów. Oto co mówią o nas klienci, z którymi mieliśmy zaszczyt współpracować.
+        </p>
+        <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+            <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Pełen profesjonalizm i niesamowite podejście do detali. Nasz event firmowy we Wrocławiu przebiegł bez najmniejszych zakłóceń. Pełna gwarancja bezpieczeństwa i spokoju ducha. Gorąco polecamy, jeśli zależy Ci na jakości!</p>
+                <div style="font-weight: bold; color: #fff;">Anna K.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Dyrektor HR</div>
+            </div>
+            <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Jako gmina szukaliśmy kogoś, kto zajmie się logistyką od A do Z. Ekipa przyjechała, rozstawiła scenę i ogarnęła całą technikę. Szybko, terminowo i bardzo bezpiecznie. Zaoszczędziliśmy mnóstwo stresu i pieniędzy.</p>
+                <div style="font-weight: bold; color: #fff;">Piotr W.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Wydział Promocji Gminy</div>
+            </div>
+            <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Immersyjne gry terenowe, które stworzyli dla nas na zamku, to był absolutny hit! Goście byli zachwyceni. Jako jedna z nielicznych firm w Polsce mają tak unikalny i innowacyjny produkt edukacyjny. To wyższy poziom rozrywki.</p>
+                <div style="font-weight: bold; color: #fff;">Katarzyna M.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Manager Obiektu Historycznego</div>
+            </div>
+        </div>
+    </section>
+
     <!-- Specialist Hero Section -->
     <section class="specialist-hero"
         style="padding: 100px 20px; text-align: center; background: linear-gradient(to bottom, var(--surface-color), var(--bg-color));">
         <div style="max-width: 900px; margin: 0 auto;">
             <h2 class="section-title" style="margin-bottom: 20px;">
-                Jesteśmy <span class="magical-text">specjalistami</span> w ożywianiu <span class="magical-text">zamków,
-                    ruin</span> i innych obiektów historycznych
+                Jako <span class="magical-text">jedna z niewielu agencji</span> specjalizujemy się w ożywianiu <span class="magical-text">zamków,
+                    ruin</span> i obiektów historycznych
             </h2>
             <div
                 style="width: 100px; height: 3px; background: var(--primary-glow); margin: 0 auto 30px auto; box-shadow: 0 0 10px var(--primary-color);">
