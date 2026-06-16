@@ -116,8 +116,9 @@
     <link rel="stylesheet" href="css/style.css?v=3">
     <?php
     if (isset($heroSliderImages) && is_array($heroSliderImages)) {
-        foreach ($heroSliderImages as $imgUrl) {
-            echo '<link rel="preload" as="image" href="' . htmlspecialchars($imgUrl) . '">';
+        foreach ($heroSliderImages as $imgData) {
+            $url = is_array($imgData) ? $imgData['url'] : $imgData;
+            echo '<link rel="preload" as="image" href="' . htmlspecialchars($url) . '">';
         }
     }
     
