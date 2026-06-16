@@ -22,9 +22,12 @@ require_once 'galeria_config.php';
                     shuffle($top_photos); // Random order
                     foreach ($top_photos as $index => $photo) {
                         $src = str_replace('assets/', '', $photo);
+                        $alt = !empty($graphics_seo[$photo]['alt']) ? htmlspecialchars($graphics_seo[$photo]['alt']) : 'Galeria Realizacji';
+                        $title_attr = !empty($graphics_seo[$photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$photo]['title']) . '"' : '';
+                        
                         // Store full-res URL for lightbox and a smaller version for slider
-                        echo '<div class="slider-item" data-src="image.php?src=' . urlencode($src) . '&w=1920&h=0" data-gallery="top-slider">';
-                        echo '<img src="image.php?src=' . urlencode($src) . '&w=800&h=0" alt="Galeria" loading="lazy" draggable="false" />';
+                        echo '<div class="slider-item" data-src="image.php?src=' . urlencode($src) . '&w=1920&h=0" data-gallery="top-slider" ' . $title_attr . '>';
+                        echo '<img src="image.php?src=' . urlencode($src) . '&w=800&h=0" alt="' . $alt . '" ' . $title_attr . ' loading="lazy" draggable="false" />';
                         echo '<div class="slider-overlay"><i class="fas fa-search-plus"></i></div>';
                         echo '</div>';
                     }
@@ -65,9 +68,13 @@ require_once 'galeria_config.php';
                                 sort($event_photos); // Alphabetical sorting for predictable order within events
                                 foreach ($event_photos as $photoIndex => $photo) {
                                     $src = str_replace('assets/', '', $photo);
+                                    $event_id = $index;
                                     // Using data-src for full res image
-                                    echo '<div class="gallery-item event-gallery-item" data-src="image.php?src=' . urlencode($src) . '&w=1920&h=0" data-gallery="event-' . $index . '">';
-                                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=0" alt="' . htmlspecialchars($event['title']) . '" loading="lazy" />';
+                                    $alt = !empty($graphics_seo[$photo]['alt']) ? htmlspecialchars($graphics_seo[$photo]['alt']) : htmlspecialchars($event['title']);
+                                    $title_attr = !empty($graphics_seo[$photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$photo]['title']) . '"' : '';
+                                    
+                                    echo '<div class="gallery-item event-gallery-item" data-src="image.php?src=' . urlencode($src) . '&w=1920&h=0" data-gallery="event-' . $index . '" ' . $title_attr . '>';
+                                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=0" alt="' . $alt . '" ' . $title_attr . ' loading="lazy" />';
                                     echo '<div class="gallery-overlay"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></div>';
                                     echo '</div>';
                                 }

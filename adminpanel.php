@@ -245,6 +245,36 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         }
     }
 
+    // Save Graphics SEO
+    if ($_POST['action'] === 'save_graphics_seo') {
+        $graphics_seo_file = $data_dir . '/graphics_seo.json';
+        $graphics_seo = file_exists($graphics_seo_file) ? json_decode(file_get_contents($graphics_seo_file), true) : [];
+        if (!is_array($graphics_seo)) $graphics_seo = [];
+        
+        $alts = $_POST['gfx_alt'] ?? [];
+        $titles = $_POST['gfx_title'] ?? [];
+        
+        foreach ($alts as $filepath => $alt_text) {
+            $alt_text = trim($alt_text);
+            $title_text = trim($titles[$filepath] ?? '');
+            
+            if (!isset($graphics_seo[$filepath])) {
+                $graphics_seo[$filepath] = [];
+            }
+            $graphics_seo[$filepath]['alt'] = $alt_text;
+            $graphics_seo[$filepath]['title'] = $title_text;
+            
+            // Clean up empty records to save space
+            if (empty($alt_text) && empty($title_text)) {
+                unset($graphics_seo[$filepath]);
+            }
+        }
+        
+        file_put_contents($graphics_seo_file, json_encode($graphics_seo, JSON_PRETTY_PRINT));
+        header("Location: adminpanel?msg=SEO+Grafik+zapisane");
+        exit;
+    }
+
     // Save NextEvent
     $next_event_json = __DIR__ . '/LegacyNextEvent.json';
     if ($_POST['action'] === 'save_nextevent') {
@@ -392,6 +422,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                 <button onclick="document.getElementById('nextEventModal').style.display='block'" style="background:#f39c12; margin:0;">Zarządzaj NextEvent</button>
                 <button onclick="document.getElementById('subSeoModal').style.display='block'" style="background:#8e44ad; margin:0;">SEO Podstron</button>
                 <button onclick="document.getElementById('seoModal').style.display='block'" style="background:var(--primary-color); margin:0;">Globalne SEO/GEO</button>
+                <button onclick="document.getElementById('graphicsSeoModal').style.display='block'" style="background:#27ae60; margin:0;">SEO Grafik</button>
                 <a href="?logout=1" style="color:#fff; text-decoration:none; margin-left: 15px;">Wyloguj</a>
             </div>
         </div>
@@ -601,6 +632,62 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <div style="margin-top: 20px;">
                         <button type="submit">Zapisz Wydarzenie</button>
                         <button type="button" class="btn-danger" onclick="document.getElementById('nextEventModal').style.display='none'">Zamknij</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Graphics SEO -->
+        <div id="graphicsSeoModal" class="modal">
+            <div class="modal-content" style="max-width: 1000px;">
+                <h3>Optymalizacja SEO / GEO Grafik (ALT & TITLE)</h3>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Wpisz opisy, które odczyta Google. Warto dodawać słowa kluczowe (np. "Wynajem nagłośnienia") i lokalizacje GEO (np. "Wrocław", "Jelenia Góra"). Puste opisy nie zostaną nadpisane na stronie.</p>
+                
+                <form method="POST">
+                    <input type="hidden" name="action" value="save_graphics_seo">
+                    
+                    <div style="max-height: 60vh; overflow-y: auto; padding-right:10px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                            <?php
+                            $graphics_seo_file = $data_dir . '/graphics_seo.json';
+                            $graphics_seo = file_exists($graphics_seo_file) ? json_decode(file_get_contents($graphics_seo_file), true) : [];
+                            if (!is_array($graphics_seo)) $graphics_seo = [];
+                            
+                            $all_images = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                            if ($all_images): 
+                                foreach ($all_images as $img_path):
+                                    $encoded_path = htmlspecialchars($img_path);
+                                    $alt = $graphics_seo[$img_path]['alt'] ?? '';
+                                    $title = $graphics_seo[$img_path]['title'] ?? '';
+                                    $img_src = 'image.php?src=' . urlencode(str_replace('assets/', '', $img_path)) . '&w=300&h=200&crop=1';
+                            ?>
+                                <div style="background: #222; border: 1px solid #444; border-radius: 8px; overflow: hidden; display:flex; flex-direction:column;">
+                                    <div style="height:150px; background: #111;">
+                                        <img src="<?= $img_src ?>" alt="thumb" style="width:100%; height:100%; object-fit:cover;">
+                                    </div>
+                                    <div style="padding: 10px; display:flex; flex-direction:column; gap:10px;">
+                                        <div>
+                                            <label style="font-size:0.8rem; color:#aaa; margin-bottom:2px;">Tekst Alternatywny (ALT):</label>
+                                            <input type="text" name="gfx_alt[<?= $encoded_path ?>]" value="<?= htmlspecialchars($alt) ?>" placeholder="np. Wynajem oświetlenia" style="width:100%; padding:5px; font-size:0.9rem;">
+                                        </div>
+                                        <div>
+                                            <label style="font-size:0.8rem; color:#aaa; margin-bottom:2px;">Tytuł GEO (TITLE - opcjonalnie):</label>
+                                            <input type="text" name="gfx_title[<?= $encoded_path ?>]" value="<?= htmlspecialchars($title) ?>" placeholder="np. Legnica" style="width:100%; padding:5px; font-size:0.9rem;">
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php 
+                                endforeach; 
+                            else: 
+                                echo '<p>Brak zdjęć w galerii EventPhotos.</p>';
+                            endif; 
+                            ?>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; display:flex; gap:10px; align-items:center;">
+                        <button type="submit" style="background:#27ae60;">Zapisz SEO Wszystkich Grafik</button>
+                        <button type="button" class="btn-danger" onclick="document.getElementById('graphicsSeoModal').style.display='none'">Zamknij okno</button>
                     </div>
                 </form>
             </div>

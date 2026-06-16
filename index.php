@@ -19,7 +19,10 @@ if ($photos) {
         $sliderPhotos = array_slice($horizontalPhotos, 0, 5); // Take 5 random photos
         foreach ($sliderPhotos as $photo) {
             $src = str_replace('assets/', '', $photo);
-            $heroSliderImages[] = 'image.php?src=' . urlencode($src) . '&w=1200&h=800&crop=1';
+            $heroSliderImages[] = [
+                'url' => 'image.php?src=' . urlencode($src) . '&w=1200&h=800&crop=1',
+                'path' => $photo
+            ];
         }
     }
 }
@@ -47,11 +50,16 @@ require_once 'header.php';
             <div class="hero-slider-container">
                 <?php
                 if (!empty($heroSliderImages)) {
-                    foreach ($heroSliderImages as $index => $imgUrl) {
+                    foreach ($heroSliderImages as $index => $imgData) {
+                        $imgUrl = $imgData['url'];
+                        $path = $imgData['path'];
+                        $alt = !empty($graphics_seo[$path]['alt']) ? htmlspecialchars($graphics_seo[$path]['alt']) : 'Event LegacyEvents';
+                        $title_attr = !empty($graphics_seo[$path]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$path]['title']) . '"' : '';
+                        
                         // Start active only the first slide
                         $activeClass = $index === 0 ? 'active' : '';
                         echo '<div class="hero-slide ' . $activeClass . '">';
-                        echo '<img src="' . htmlspecialchars($imgUrl) . '" class="slide-image" alt="Event" loading="eager" decoding="async" />';
+                        echo '<img src="' . htmlspecialchars($imgUrl) . '" class="slide-image" alt="' . $alt . '" ' . $title_attr . ' loading="eager" decoding="async" />';
                         echo '<div class="light-ray-overlay"></div>';
                         echo '</div>';
                     }
@@ -175,8 +183,11 @@ require_once 'header.php';
                     $carouselImages = array_merge($photos, $photos);
                     foreach ($carouselImages as $photo) {
                         $src = str_replace('assets/', '', $photo);
+                        $alt = !empty($graphics_seo[$photo]['alt']) ? htmlspecialchars($graphics_seo[$photo]['alt']) : 'Zdjęcie Eventowe';
+                        $title_attr = !empty($graphics_seo[$photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$photo]['title']) . '"' : '';
+                        
                         echo '<div class="carousel-item">';
-                        echo '<img src="image.php?src=' . urlencode($src) . '&w=400&h=250&crop=1" alt="Event Photo" loading="lazy" />';
+                        echo '<img src="image.php?src=' . urlencode($src) . '&w=400&h=250&crop=1" alt="' . $alt . '" ' . $title_attr . ' loading="lazy" />';
                         echo '</div>';
                     }
                 }

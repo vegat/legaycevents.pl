@@ -31,6 +31,17 @@
     }
     
     $pages_seo = file_exists($pages_seo_file) ? json_decode(file_get_contents($pages_seo_file), true) : [];
+    
+    // Graphics SEO initialization
+    $graphics_seo_file = __DIR__ . '/data/graphics_seo.json';
+    if (!file_exists($graphics_seo_file)) {
+        if (is_dir(__DIR__ . '/data')) {
+            file_put_contents($graphics_seo_file, json_encode([], JSON_PRETTY_PRINT));
+        }
+    }
+    $graphics_seo = file_exists($graphics_seo_file) ? json_decode(file_get_contents($graphics_seo_file), true) : [];
+    if (!is_array($graphics_seo)) $graphics_seo = [];
+    
     $current_file = basename($_SERVER['PHP_SELF']);
     
     if (isset($pages_seo[$current_file])) {

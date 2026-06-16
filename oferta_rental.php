@@ -47,8 +47,11 @@ $cat = $oferta_config['rental'];
                 <?php
                 $photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
                 if ($photos) {
-                    $src = str_replace('assets/', '', $photos[array_rand($photos)]);
-                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=600&crop=1" alt="Rental" style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">';
+                    $rand_photo = $photos[array_rand($photos)];
+                    $src = str_replace('assets/', '', $rand_photo);
+                    $alt = !empty($graphics_seo[$rand_photo]['alt']) ? htmlspecialchars($graphics_seo[$rand_photo]['alt']) : 'Wynajem sprzętu eventowego';
+                    $title_attr = !empty($graphics_seo[$rand_photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$rand_photo]['title']) . '"' : '';
+                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=600&crop=1" alt="' . $alt . '" ' . $title_attr . ' style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">';
                 }
                 ?>
             </div>

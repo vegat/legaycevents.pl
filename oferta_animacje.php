@@ -61,8 +61,11 @@ $cat = $oferta_config['animacje'];
                 <?php
                 $photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
                 if ($photos) {
-                    $src = str_replace('assets/', '', $photos[array_rand($photos)]);
-                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=400&crop=1" alt="Animacje" style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);">';
+                    $rand_photo = $photos[array_rand($photos)];
+                    $src = str_replace('assets/', '', $rand_photo);
+                    $alt = !empty($graphics_seo[$rand_photo]['alt']) ? htmlspecialchars($graphics_seo[$rand_photo]['alt']) : 'Animacje Eventowe';
+                    $title_attr = !empty($graphics_seo[$rand_photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$rand_photo]['title']) . '"' : '';
+                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=400&crop=1" alt="' . $alt . '" ' . $title_attr . ' style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);">';
                 }
                 ?>
             </div>
