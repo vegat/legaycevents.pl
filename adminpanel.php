@@ -56,6 +56,22 @@ if (!file_exists($pages_seo_file)) {
 $posts_json = $data_dir . '/posts.json';
 $upload_dir = __DIR__ . '/assets/blog/';
 
+$gallery_json = $data_dir . '/gallery.json';
+if (!file_exists($gallery_json)) {
+    if (file_exists(__DIR__ . '/galeria_config.php')) {
+        include __DIR__ . '/galeria_config.php';
+        if (isset($gallery_events)) {
+            foreach ($gallery_events as &$ge) {
+                if (!isset($ge['id'])) $ge['id'] = uniqid();
+            }
+            file_put_contents($gallery_json, json_encode($gallery_events, JSON_PRETTY_PRINT));
+        }
+    } else {
+        file_put_contents($gallery_json, json_encode([], JSON_PRETTY_PRINT));
+    }
+}
+$gallery_upload_dir = __DIR__ . '/assets/Events/';
+
 // --- Anti-bruteforce ---
 $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 $attempts_data = file_exists($attempts_json) ? json_decode(file_get_contents($attempts_json), true) : [];
@@ -374,6 +390,98 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         header("Location: adminpanel?msg=Usunięto");
         exit;
     }
+    
+    if (in_array($_POST['action'], ['add_gallery', 'edit_gallery'])) {
+        $id = $_POST['id'] ?: uniqid();
+        $title = trim($_POST['title']);
+        $date = trim($_POST['date']);
+        $location = trim($_POST['location']);
+        $slug = slugify($title) . '-' . substr($id, 0, 4);
+        
+        $gallery_items = file_exists($gallery_json) ? json_decode(file_get_contents($gallery_json), true) : [];
+        if (!is_array($gallery_items)) $gallery_items = [];
+        
+        $item = [
+            'id' => $id,
+            'title' => $title,
+            'date' => $date,
+            'location' => $location,
+            'path' => 'assets/Events/' . $slug
+        ];
+        
+        if ($_POST['action'] === 'edit_gallery') {
+            foreach ($gallery_items as &$g) {
+                if ($g['id'] === $id) {
+                    $item['path'] = $g['path'] ?? $item['path'];
+                    break;
+                }
+            }
+        }
+        
+        $event_dir = __DIR__ . '/' . $item['path'];
+        if (!is_dir($event_dir)) {
+            mkdir($event_dir, 0755, true);
+        }
+        
+        if (isset($_POST['delete_gallery_photos']) && is_array($_POST['delete_gallery_photos'])) {
+            foreach ($_POST['delete_gallery_photos'] as $del_photo) {
+                $photo_path = __DIR__ . '/' . trim($del_photo, '/');
+                if (file_exists($photo_path) && strpos($photo_path, $event_dir) !== false) {
+                    @unlink($photo_path);
+                }
+            }
+        }
+        
+        if (isset($_FILES['gallery_photos'])) {
+            $file_count = count($_FILES['gallery_photos']['name']);
+            for ($i = 0; $i < $file_count; $i++) {
+                if ($_FILES['gallery_photos']['error'][$i] === UPLOAD_ERR_OK) {
+                    $tmp_name = $_FILES['gallery_photos']['tmp_name'][$i];
+                    $mime = $_FILES['gallery_photos']['type'][$i];
+                    processGalleryImage($tmp_name, $mime, $event_dir . '/');
+                }
+            }
+        }
+        
+        if ($_POST['action'] === 'edit_gallery') {
+            foreach ($gallery_items as $k => $g) {
+                if ($g['id'] === $id) {
+                    $gallery_items[$k] = $item;
+                    break;
+                }
+            }
+        } else {
+            array_unshift($gallery_items, $item);
+        }
+        
+        file_put_contents($gallery_json, json_encode(array_values($gallery_items), JSON_PRETTY_PRINT));
+        header("Location: adminpanel?msg=Zapisano");
+        exit;
+    }
+    
+    if ($_POST['action'] === 'delete_gallery') {
+        $id = $_POST['id'];
+        $gallery_items = file_exists($gallery_json) ? json_decode(file_get_contents($gallery_json), true) : [];
+        if (!is_array($gallery_items)) $gallery_items = [];
+        
+        foreach ($gallery_items as $k => $g) {
+            if ($g['id'] === $id) {
+                if (!empty($g['path']) && is_dir(__DIR__ . '/' . $g['path'])) {
+                    $files = glob(__DIR__ . '/' . $g['path'] . '/*');
+                    foreach ($files as $file) {
+                        if (is_file($file)) @unlink($file);
+                    }
+                    @rmdir(__DIR__ . '/' . $g['path']);
+                }
+                unset($gallery_items[$k]);
+                break;
+            }
+        }
+        
+        file_put_contents($gallery_json, json_encode(array_values($gallery_items), JSON_PRETTY_PRINT));
+        header("Location: adminpanel?msg=Usunięto");
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -464,8 +572,46 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                 </div>
             </div>
         <?php endforeach; ?>
+        
+        <div style="margin-top: 40px; margin-bottom: 20px;">
+            <hr style="border-color: #333;">
+            <h3 style="margin-top: 40px;">Wydarzenia w Galerii</h3>
+            <button onclick="openGalleryModal('add_gallery')">Dodaj Nowe Wydarzenie do Galerii</button>
+        </div>
+        
+        <?php 
+        $gallery_items = file_exists($gallery_json) ? json_decode(file_get_contents($gallery_json), true) : [];
+        if (empty($gallery_items)) echo '<p>Brak wydarzeń w galerii.</p>';
+        foreach ((array)$gallery_items as $g): 
+            $cover = '';
+            if (!empty($g['path']) && is_dir(__DIR__ . '/' . $g['path'])) {
+                $files = glob(__DIR__ . '/' . $g['path'] . '/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                if (!empty($files)) {
+                    $cover = str_replace(__DIR__ . '/', '', $files[0]);
+                }
+            }
+        ?>
+            <div class="post-item">
+                <div style="display:flex; align-items:center;">
+                    <?php if(!empty($cover)) echo '<img src="'.htmlspecialchars($cover).'" alt="img">'; ?>
+                    <div>
+                        <h4><?= htmlspecialchars($g['title']) ?></h4>
+                        <small><?= htmlspecialchars($g['date']) ?> | <?= htmlspecialchars($g['location']) ?></small>
+                        <br><small style="color:#aaa;">Katalog: <?= htmlspecialchars($g['path']) ?></small>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="openGalleryModal('edit_gallery', '<?= $g['id'] ?>')">Edytuj</button>
+                    <form method="POST" style="display:inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć to wydarzenie wraz z WSZYSTKIMI zdjęciami z dysku?');">
+                        <input type="hidden" name="action" value="delete_gallery">
+                        <input type="hidden" name="id" value="<?= $g['id'] ?>">
+                        <button type="submit" class="btn-danger">Usuń</button>
+                    </form>
+                </div>
+            </div>
+        <?php endforeach; ?>
 
-        <!-- Modal -->
+        <!-- Modal for Blog -->
         <div id="editorModal" class="modal">
             <div class="modal-content">
                 <h3 id="modalTitle">Dodaj/Edytuj Wpis</h3>
@@ -509,6 +655,42 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <div style="margin-top: 30px;">
                         <button type="submit" onclick="submitForm(event)">Zapisz Wpis</button>
                         <button type="button" class="btn-danger" onclick="document.getElementById('editorModal').style.display='none'">Anuluj</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Modal for Gallery -->
+        <div id="galleryModal" class="modal">
+            <div class="modal-content">
+                <h3 id="galleryModalTitle">Dodaj/Edytuj Wydarzenie w Galerii</h3>
+                <form id="galleryForm" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" id="galleryFormAction" value="add_gallery">
+                    <input type="hidden" name="id" id="galleryFormId" value="">
+                    
+                    <label>Tytuł Wydarzenia (np. Halloween):</label>
+                    <input type="text" name="title" id="galleryFormTitle" required>
+                    
+                    <div style="display:flex; gap:15px; margin-top:10px;">
+                        <div style="flex:1;">
+                            <label>Data / Rok (np. 2025):</label>
+                            <input type="text" name="date" id="galleryFormDate" required>
+                        </div>
+                        <div style="flex:1;">
+                            <label>Lokalizacja (np. Zamek Świny):</label>
+                            <input type="text" name="location" id="galleryFormLocation" required>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:20px; padding-top:20px; border-top:1px solid #333;">
+                        <label>Zdjęcia do galerii tego wydarzenia (możesz wgrać wiele naraz):</label>
+                        <input type="file" name="gallery_photos[]" accept="image/*" multiple id="galleryFormPhotos">
+                        <div id="existingGalleryPhotos" class="gallery-preview"></div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button type="submit">Zapisz Wydarzenie</button>
+                        <button type="button" class="btn-danger" onclick="document.getElementById('galleryModal').style.display='none'">Anuluj</button>
                     </div>
                 </form>
             </div>
@@ -766,6 +948,31 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     quill.root.innerHTML = '';
                     document.getElementById('formImage').required = true;
                     document.getElementById('existingGallery').innerHTML = '';
+                }
+            }
+
+            var galleryData = <?= json_encode($gallery_items) ?>;
+
+            function openGalleryModal(action, id = null) {
+                document.getElementById('galleryModal').style.display = 'block';
+                document.getElementById('galleryFormAction').value = action;
+                document.getElementById('galleryModalTitle').innerText = action === 'add_gallery' ? 'Dodaj Wydarzenie do Galerii' : 'Edytuj Wydarzenie';
+                
+                if (action === 'edit_gallery') {
+                    var g = galleryData.find(item => item.id === id);
+                    if (g) {
+                        document.getElementById('galleryFormId').value = g.id;
+                        document.getElementById('galleryFormTitle').value = g.title;
+                        document.getElementById('galleryFormDate').value = g.date;
+                        document.getElementById('galleryFormLocation').value = g.location;
+                        document.getElementById('existingGalleryPhotos').innerHTML = '<p style="font-size:0.8rem; color:#aaa;">Wgrywanie nowych zdjęć dodaje je do tego folderu. Aby usunąć, musisz usunąć całe wydarzenie i wgrać je od nowa.</p>';
+                    }
+                } else {
+                    document.getElementById('galleryFormId').value = '';
+                    document.getElementById('galleryFormTitle').value = '';
+                    document.getElementById('galleryFormDate').value = new Date().getFullYear().toString();
+                    document.getElementById('galleryFormLocation').value = '';
+                    document.getElementById('existingGalleryPhotos').innerHTML = '';
                 }
             }
 

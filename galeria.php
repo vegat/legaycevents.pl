@@ -2,7 +2,16 @@
 $seo_title = "Galeria Realizacji Eventowych | LegacyEvents";
 $seo_description = "Zobacz zdjęcia z naszych najlepszych realizacji. Koncerty, pokazy, scenotechnika, animacje i wiele więcej pięknych chwil ujętych w kadrach.";
 require_once 'header.php';
-require_once 'galeria_config.php';
+
+$gallery_json = __DIR__ . '/data/gallery.json';
+if (file_exists($gallery_json)) {
+    $gallery_events = json_decode(file_get_contents($gallery_json), true);
+    if (!is_array($gallery_events)) {
+        require_once 'galeria_config.php';
+    }
+} else {
+    require_once 'galeria_config.php';
+}
 ?>
 
 <main class="page-wrapper gallery-page">
