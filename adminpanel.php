@@ -958,7 +958,21 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                 }
             }
 
-            var galleryData = <?= json_encode($gallery_items) ?>;
+            var galleryData = <?php 
+                $full_gallery_items = $gallery_items;
+                foreach ($full_gallery_items as &$item) {
+                    $item['photos'] = [];
+                    if (!empty($item['path']) && is_dir(__DIR__ . '/' . $item['path'])) {
+                        $files = glob(__DIR__ . '/' . $item['path'] . '/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                        if (!empty($files)) {
+                            foreach ($files as $file) {
+                                $item['photos'][] = str_replace(__DIR__ . '/', '', $file);
+                            }
+                        }
+                    }
+                }
+                echo json_encode($full_gallery_items);
+            ?>;
 
             function openGalleryModal(action, id = null) {
                 document.getElementById('galleryModal').style.display = 'block';
@@ -972,7 +986,21 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                         document.getElementById('galleryFormTitle').value = g.title;
                         document.getElementById('galleryFormDate').value = g.date;
                         document.getElementById('galleryFormLocation').value = g.location;
-                        document.getElementById('existingGalleryPhotos').innerHTML = '<p style="font-size:0.8rem; color:#aaa;">Wgrywanie nowych zdjęć dodaje je do tego folderu. Aby usunąć, musisz usunąć całe wydarzenie i wgrać je od nowa.</p>';
+                        
+                        var photosHtml = '<p style="font-size:0.8rem; color:#aaa; margin-bottom: 10px;">Zaznacz zdjęcia, które chcesz usunąć (nowe zostaną dodane do tej puli):</p>';
+                        if (g.photos && g.photos.length > 0) {
+                            photosHtml += '<div style="display: flex; gap: 10px; flex-wrap: wrap;">';
+                            g.photos.forEach(function(img) {
+                                photosHtml += '<div style="background: #222; padding: 5px; border-radius: 5px; width: 100px; text-align: center;">';
+                                photosHtml += '<img src="'+img+'" alt="photo" style="width:100%; height:70px; object-fit:cover; border-radius:3px;">';
+                                photosHtml += '<label style="display:block; font-size:0.8rem; margin-top:5px; cursor:pointer;"><input type="checkbox" name="delete_gallery_photos[]" value="'+img+'"> Usuń</label>';
+                                photosHtml += '</div>';
+                            });
+                            photosHtml += '</div>';
+                        } else {
+                            photosHtml += '<p style="font-size:0.8rem; color:#aaa;">Brak przypisanych zdjęć.</p>';
+                        }
+                        document.getElementById('existingGalleryPhotos').innerHTML = photosHtml;
                     }
                 } else {
                     document.getElementById('galleryFormId').value = '';
