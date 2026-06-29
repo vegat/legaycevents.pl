@@ -584,10 +584,12 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         if (empty($gallery_items)) echo '<p>Brak wydarzeń w galerii.</p>';
         foreach ((array)$gallery_items as $g): 
             $cover = '';
+            $photo_count = 0;
             if (!empty($g['path']) && is_dir(__DIR__ . '/' . $g['path'])) {
                 $files = glob(__DIR__ . '/' . $g['path'] . '/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
                 if (!empty($files)) {
                     $cover = str_replace(__DIR__ . '/', '', $files[0]);
+                    $photo_count = count($files);
                 }
             }
         ?>
@@ -597,7 +599,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <div>
                         <h4><?= htmlspecialchars($g['title']) ?></h4>
                         <small><?= htmlspecialchars($g['date']) ?> | <?= htmlspecialchars($g['location']) ?></small>
-                        <br><small style="color:#aaa;">Katalog: <?= htmlspecialchars($g['path']) ?></small>
+                        <br><small style="color:#aaa;">Katalog: <?= htmlspecialchars($g['path']) ?> | Ilość zdjęć: <?= $photo_count ?></small>
                     </div>
                 </div>
                 <div>
@@ -837,7 +839,12 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                             
                             $event_photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
                             $blog_photos = glob('assets/blog/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
-                            $all_images = array_merge(is_array($event_photos) ? $event_photos : [], is_array($blog_photos) ? $blog_photos : []);
+                            $gallery_photos = glob('assets/Events/*/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                            $all_images = array_merge(
+                                is_array($event_photos) ? $event_photos : [], 
+                                is_array($blog_photos) ? $blog_photos : [],
+                                is_array($gallery_photos) ? $gallery_photos : []
+                            );
                             if (!empty($all_images)): 
                                 foreach ($all_images as $img_path):
                                     $encoded_path = htmlspecialchars($img_path);
@@ -863,7 +870,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                             <?php 
                                 endforeach; 
                             else: 
-                                echo '<p>Brak zdjęć w galeriach EventPhotos i blog.</p>';
+                                echo '<p>Brak zdjęć w galeriach EventPhotos, Events i blog.</p>';
                             endif; 
                             ?>
                         </div>
