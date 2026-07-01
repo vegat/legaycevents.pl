@@ -119,17 +119,18 @@ require_once 'header.php';
     }
 
     // Aplikowanie pobranych danych z JSON;
-    if (is_array($fetched_event) && isset($fetched_event['active']) && $fetched_event['active']) {
+    if (is_array($fetched_event) && (!isset($fetched_event['active']) || $fetched_event['active'])) {
         $is_active_event = true;
-        // Aktualizacja tytułu, daty i linku jeśli przesłane
-        $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : $upcoming_event['title'];
-        $upcoming_event['date']  = !empty($fetched_event['date']) ? $fetched_event['date'] : $upcoming_event['date'];
-        $upcoming_event['link']  = !empty($fetched_event['link']) ? $fetched_event['link'] : $upcoming_event['link'];
-    } elseif (is_array($fetched_event) && isset($fetched_event['active']) && !$fetched_event['active']) {
-        // Jeśli JSON zadeklarował brak bieżącego wydarzenia, wyświetlamy status "Wkrótce"
-        $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : 'Kolejnych Naszych Wydarzeniach';
-        $upcoming_event['date']  = 'Wkrótce';
-        $upcoming_event['link']  = '#';
+        $upcoming_event['subtitle'] = !empty($fetched_event['subtitle']) ? $fetched_event['subtitle'] : $upcoming_event['subtitle'];
+        $upcoming_event['title']    = !empty($fetched_event['title']) ? $fetched_event['title'] : $upcoming_event['title'];
+        $upcoming_event['date']     = !empty($fetched_event['date']) ? $fetched_event['date'] : $upcoming_event['date'];
+        $upcoming_event['link']     = !empty($fetched_event['link']) ? $fetched_event['link'] : $upcoming_event['link'];
+    } else {
+        // Jeśli JSON zadeklarował brak bieżącego wydarzenia (active = false), wyświetlamy status "Wkrótce"
+        $upcoming_event['subtitle'] = 'Już wkrótce zobaczymy się na...';
+        $upcoming_event['title']    = 'Kolejnych Naszych Wydarzeniach';
+        $upcoming_event['date']     = 'Wkrótce';
+        $upcoming_event['link']     = '#';
     }
     ?>
     <section class="feature-image-section">

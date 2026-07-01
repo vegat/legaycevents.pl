@@ -793,12 +793,12 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <?php 
                     $next_event_file = __DIR__ . '/LegacyNextEvent.json';
                     $ne = file_exists($next_event_file) ? json_decode(file_get_contents($next_event_file), true) : [];
-                    $isActive = isset($ne['active']) && $ne['active'] ? 'checked' : '';
+                    $isActive = (!isset($ne['active']) || $ne['active']) ? 'checked' : '';
                     ?>
                     
-                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; margin-bottom: 20px; font-weight:bold;">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; margin-bottom: 20px; font-weight:bold; color: #2ecc71; background: rgba(46,204,113,0.1); padding: 10px; border-radius: 5px;">
                         <input type="checkbox" name="event_active" value="1" <?= $isActive ?> style="width:20px; height:20px; margin:0;">
-                        Aktywuj Wydarzenie na Stronie Głównej
+                        Aktywuj Wyświetlanie Tego Wydarzenia (jeśli odznaczone, strona pokaże status "Wkrótce")
                     </label>
                     
                     <label>Nazwa / Tytuł:</label>
