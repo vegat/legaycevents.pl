@@ -5,7 +5,11 @@ Dockerfile
 docker-compose.yml
 cache/*
 router.php
-LegacyNextEvent.json
 .env
 .env.*
 *.md
+.DS_Store
+**/.DS_Store
+.user.ini
+data/*
+assets/blog/*

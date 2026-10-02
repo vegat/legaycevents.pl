@@ -1,14 +1,14 @@
 <?php
-$seo_title = "Dmuchane Zamki i Atrakcje | LegacyEvents";
-$seo_description = "Wynajem dmuchanych zamków, zjeżdżalni i atrakcji plenerowych dla dzieci i dorosłych.";
+$seo_title = "Oferta dla zamków i obiektów historycznych | LegacyEvents";
+$seo_description = "Ożywiamy zamki i obiekty historyczne: wydarzenia z fabułą, infrastruktura od zera, gry terenowe i aplikacje dla zwiedzających. Zamki Bolków, Świny, Ząbkowice Śląskie, Międzyrzecz, Czersk.";
 ob_start(); ?>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": "Dmuchane Zamki i Atrakcje",
+  "name": "Wydarzenia i atrakcje dla zamków i obiektów historycznych",
   "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
-  "description": "Wynajem dmuchanych zamków, zjeżdżalni i atrakcji plenerowych dla dzieci i dorosłych."
+  "description": "Wydarzenia fabularne, infrastruktura eventowa, videomapping, gry terenowe i aplikacje dla zwiedzających, które ożywiają zamki i ruiny."
 }
 </script>
 <?php $seo_schema = ob_get_clean();

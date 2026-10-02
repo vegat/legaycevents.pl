@@ -67,16 +67,20 @@ $seo_pages = [
     ],
     'blog' => [
         'path' => '/blog',
-        'title' => 'Blog | LegacyEvents',
-        'desc' => 'Historie zza sceny, inspiracje i poradniki dla organizatorów wydarzeń.',
-        // Wpisy są na razie przykładowe - nie indeksujemy
-        'noindex' => true,
+        'title' => 'Blog eventowy | LegacyEvents',
+        'desc' => 'Historie zza sceny, relacje z wydarzeń, inspiracje i poradniki dla organizatorów eventów.',
+    ],
+    'polityka_prywatnosci' => [
+        'path' => '/polityka_prywatnosci',
+        'title' => 'Polityka prywatności | LegacyEvents',
+        'desc' => 'Zasady przetwarzania danych osobowych oraz polityka plików cookies serwisu LegacyEvents.',
     ],
 ];
 
 $seo_page_key = basename($_SERVER['SCRIPT_NAME'] ?? 'index.php', '.php');
-$seo = $seo_pages[$seo_page_key] ?? $seo_pages['index'];
-$seo_canonical = $site_url . $seo['path'];
+$seo = $seo_pages[$seo_page_key] ?? ['title' => 'LegacyEvents', 'desc' => ''];
+// Strony spoza mapy (np. post?slug=...) - kanoniczny adres to bieżący URL
+$seo_canonical = isset($seo['path']) ? $site_url . $seo['path'] : $site_url . ($_SERVER['REQUEST_URI'] ?? '/');
 $seo_image = $site_url . '/image.php?src=' . urlencode('Events/moonlight_castle_2025/CV300261-ARW.jpg') . '&w=1200&h=630&crop=1';
 
 $seo_org = [

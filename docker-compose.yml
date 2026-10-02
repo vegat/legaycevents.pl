@@ -15,6 +15,14 @@ services:
       MAIL_TO: ${MAIL_TO:-kontakt@legacyevents.pl,banasiak@nexo-it.pl}
     volumes:
       - image-cache:/var/www/html/cache
+      # Dane panelu admina: SEO, blog, galeria, najbliższe wydarzenie, hasło admina
+      - data:/var/www/html/data
+      - blog-images:/var/www/html/assets/blog
+      # Galerie wydarzeń zarządzane z panelu (przy pierwszym starcie wypełniane zdjęciami z obrazu)
+      - gallery:/var/www/html/assets/Events
 
 volumes:
   image-cache:
+  data:
+  blog-images:
+  gallery:

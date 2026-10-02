@@ -1,6 +1,6 @@
 <?php
 $seo_title = "Oferta - Technika, Animacje, Wynajem | LegacyEvents";
-$seo_description = "Pełna oferta LegacyEvents. Zajmujemy się techniką sceniczną, animacjami, koncertami, dmuchanymi zamkami oraz wsparciem eventowym.";
+$seo_description = "Pełna oferta LegacyEvents. Zajmujemy się techniką sceniczną, animacjami, koncertami, rentalem sprzętu oraz wydarzeniami na zamkach.";
 require_once 'header.php';
 require_once 'oferta_config.php';
 ?>

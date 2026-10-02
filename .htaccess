@@ -8,9 +8,10 @@ RewriteCond %{ENV:REDIRECT_STATUS} !^$
 RewriteRule ^ - [L]
 
 # Pliki wewnętrzne - niedostępne z zewnątrz
-RewriteRule ^(vendor|cache|docker)(/|$) - [R=404,L]
+RewriteRule ^(vendor|cache|docker|data)(/|$) - [R=404,L]
 RewriteRule ^(header|footer|seo|router|galeria_config|oferta_config)(\.php)?$ - [R=404,L]
-RewriteRule ^(LegacyNextEvent\.json|Dockerfile|docker-compose\.yml|\.env.*)$ - [R=404,L]
+RewriteRule ^(LegacyNextEvent\.json|Dockerfile|docker-compose\.yml|\.env.*|\.user\.ini)$ - [R=404,L]
+RewriteRule (^|/)\.DS_Store$ - [R=404,L]
 
 # Schemat widziany przez klienta (Dokploy/Traefik terminuje TLS i ustawia X-Forwarded-Proto)
 RewriteRule ^ - [E=PROTO:http]
@@ -26,20 +27,11 @@ RewriteCond %1 !^(image|msg|sitemap|404)$
 RewriteRule ^ %{ENV:PROTO}://%{HTTP_HOST}/%1 [R=301,L,NE]
 
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
-RewriteRule ^favicon\.ico$ image.php?src=Logo/legacy_sticker.png&w=48 [L]
 
 # Zabezpieczenie przed przepisywaniem istniejących katalogów
 RewriteCond %{REQUEST_FILENAME} !-d
 # Zabezpieczenie przed przepisywaniem istniejących plików
 RewriteCond %{REQUEST_FILENAME} !-f
-<<<<<<< HEAD
 # Przepisywanie adresów bez rozszerzenia na pliki .php (tylko gdy plik istnieje)
 RewriteCond %{DOCUMENT_ROOT}/$1.php -f
-=======
-
-# Przekierowanie dla sitemap
-RewriteRule ^sitemap\.xml$ sitemap.php [L]
-
-# Przepisywanie adresów bez rozszerzenia na pliki .php
->>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
 RewriteRule ^([^\.]+)$ $1.php [NC,L]

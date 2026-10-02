@@ -45,7 +45,7 @@ if (!file_exists($pages_seo_file)) {
         'oferta_rental.php' => ['title' => 'Wynajem Sprzętu Eventowego', 'desc' => 'Profesjonalny rental sprzętu eventowego. Oferujemy nowoczesne nagłośnienie, oświetlenie, konstrukcje sceniczne i lasery.'],
         'oferta_technika.php' => ['title' => 'Technika Sceniczna i Światła', 'desc' => 'Potężne nagłośnienie i widowiskowe światła. Zaufaj specjalistom z LegacyEvents i wykorzystaj bezkompromisową technikę sceniczną.'],
         'oferta_wydarzenia.php' => ['title' => 'Organizacja Wydarzeń i Eventów', 'desc' => 'Kompleksowo prowadzimy wydarzenia korporacyjne, festyny, eventy promocyjne i masowe od pierwszego szkicu aż po wielki finał.'],
-        'oferta_zamki.php' => ['title' => 'Dmuchane Zamki i Zjeżdżalnie na Wynajem', 'desc' => 'Rozkręć każdą imprezę plenerową! Wypożycz ogromne dmuchane zamki, potężne zjeżdżalnie i kolorowe atrakcje dla dzieci.'],
+        'oferta_zamki.php' => ['title' => 'Oferta dla zamków i obiektów historycznych | LegacyEvents', 'desc' => 'Ożywiamy zamki i obiekty historyczne: wydarzenia z fabułą, infrastruktura od zera, gry terenowe i aplikacje dla zwiedzających.'],
         'kontakt.php' => ['title' => 'Kontakt z LegacyEvents', 'desc' => 'Masz pomysł na spektakularny event? Skontaktuj się z agencją LegacyEvents! Szybka darmowa wycena i doradztwo techniczne.'],
         'galeria.php' => ['title' => 'Galeria Realizacji Eventowych', 'desc' => 'Obrazy mówią więcej niż tysiąc słów. Zobacz zjawiskowe zdjęcia z naszych dotychczasowych realizacji, pokazów i koncertów.'],
         'wspolpracujemy.php' => ['title' => 'Nasi Partnerzy', 'desc' => 'Poznaj zaufane marki i profesjonalistów, z którymi LegacyEvents współtworzy największe widowiska na terenie całej Polski.']
@@ -292,13 +292,15 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
     }
 
     // Save NextEvent
-    $next_event_json = __DIR__ . '/LegacyNextEvent.json';
+    $next_event_json = $data_dir . '/LegacyNextEvent.json';
     if ($_POST['action'] === 'save_nextevent') {
         $event_data = [
             'active' => isset($_POST['event_active']) ? true : false,
             'title' => $_POST['event_title'],
             'subtitle' => $_POST['event_subtitle'],
             'date' => $_POST['event_date'],
+            'start_date' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $_POST['event_start_date'] ?? '') ? $_POST['event_start_date'] : '',
+            'location' => $_POST['event_location'] ?? '',
             'link' => $_POST['event_link']
         ];
         file_put_contents($next_event_json, json_encode($event_data, JSON_PRETTY_PRINT));
@@ -496,7 +498,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
         body { font-family: 'Space Grotesk', sans-serif; background: #0a0a12; color: #fff; margin:0; padding:20px; }
         .container { max-width: 1000px; margin: 0 auto; }
         .login-box { max-width: 400px; margin: 100px auto; background: #1a1a24; padding: 30px; border-radius: 10px; border: 1px solid #333; }
-        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin: 10px 0; background: #0a0a12; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box;}
+        input[type="text"], input[type="date"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin: 10px 0; background: #0a0a12; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box;}
         button { background: #8a2be2; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; }
         button:hover { background: #9b4dca; }
         .post-item { background: #1a1a24; margin-bottom: 15px; padding: 15px; border-radius: 8px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
@@ -791,7 +793,7 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                 <form method="POST">
                     <input type="hidden" name="action" value="save_nextevent">
                     <?php 
-                    $next_event_file = __DIR__ . '/LegacyNextEvent.json';
+                    $next_event_file = is_file($data_dir . '/LegacyNextEvent.json') ? $data_dir . '/LegacyNextEvent.json' : __DIR__ . '/LegacyNextEvent.json';
                     $ne = file_exists($next_event_file) ? json_decode(file_get_contents($next_event_file), true) : [];
                     $isActive = (!isset($ne['active']) || $ne['active']) ? 'checked' : '';
                     ?>
@@ -810,6 +812,12 @@ if ($is_logged_in && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acti
                     <label>Data wydarzenia:</label>
                     <input type="text" name="event_date" value="<?= htmlspecialchars($ne['date'] ?? '') ?>">
                     
+                    <label>Data dla Google (RRRR-MM-DD, do danych strukturalnych):</label>
+                    <input type="date" name="event_start_date" value="<?= htmlspecialchars($ne['start_date'] ?? '') ?>">
+
+                    <label>Miejsce (np. Zamek Świny):</label>
+                    <input type="text" name="event_location" value="<?= htmlspecialchars($ne['location'] ?? '') ?>">
+
                     <label>Link docelowy (URL):</label>
                     <input type="text" name="event_link" value="<?= htmlspecialchars($ne['link'] ?? '#') ?>">
                     

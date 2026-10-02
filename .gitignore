@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 cache/*
 .env
-=======
-data/*.json
+data/*
+!data/.gitkeep
 assets/blog/*
 !assets/blog/.gitkeep
->>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
+.DS_Store

@@ -18,9 +18,10 @@ COPY docker/apache.conf /etc/apache2/conf-enabled/zz-legacyevents.conf
 WORKDIR /var/www/html
 COPY --chown=www-data:www-data . .
 
-RUN mkdir -p cache && chown -R www-data:www-data cache
+RUN mkdir -p cache data assets/blog assets/Events \
+    && chown -R www-data:www-data cache data assets/blog assets/Events
 
-VOLUME ["/var/www/html/cache"]
+VOLUME ["/var/www/html/cache", "/var/www/html/data", "/var/www/html/assets/blog", "/var/www/html/assets/Events"]
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

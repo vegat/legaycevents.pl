@@ -2,11 +2,7 @@
 <section class="cta-bottom" style="text-align: center; padding: 100px 20px; position:relative; overflow: hidden;">
     <div class="cta-bottom-wrapper">
         <h2 class="handwritten-title">Let's event!</h2>
-<<<<<<< HEAD
-        <a href="/kontakt" class="cta-button primary animated-glow-btn">Zróbmy razem coś fajnego</a>
-=======
-        <a href="https://widget.legacyevents.pl/uslugi" target="_blank" class="cta-button primary animated-glow-btn">Zróbmy razem coś fajnego</a>
->>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
+        <a href="https://widget.legacyevents.pl/uslugi" target="_blank" rel="noopener" class="cta-button primary animated-glow-btn">Zróbmy razem coś fajnego</a>
     </div>
     <!-- Blask tła CTA -->
     <div
@@ -42,20 +38,16 @@
                 <li><a href="/galeria"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Galeria</a>
                 </li>
-<<<<<<< HEAD
-                <li><a href="/wspolpracujemy"
-=======
-                <li><a href="blog"
+                <li><a href="/blog"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Blog</a>
                 </li>
-                <li><a href="wspolpracujemy"
->>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
+                <li><a href="/wspolpracujemy"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Współpracujemy</a>
                 </li>
                 <li><a href="/kontakt"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">Kontakt</a>
                 </li>
-                <li><a href="polityka_prywatnosci"
+                <li><a href="/polityka_prywatnosci"
                         style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s; font-size: 0.9em; opacity: 0.7;">Polityka Prywatności</a>
                 </li>
             </ul>
