@@ -31,8 +31,8 @@
                 <div style="margin-bottom: 30px;">
                     <h3 style="color: var(--primary-color); font-size: 1rem; margin-bottom: 5px;">Kontakt</h3>
                     <p style="color: #fff; font-weight: 500;">
-                        Telefon: 780 752 938<br>
-                        Email: kontakt@legacyevents.pl
+                        Telefon: <a href="tel:+48780752938" style="color: inherit;">780 752 938</a><br>
+                        Email: <a href="mailto:kontakt@legacyevents.pl" style="color: inherit;">kontakt@legacyevents.pl</a>
                     </p>
                 </div>
 
@@ -40,15 +40,15 @@
                     <h3 style="font-family: var(--font-heading); color: #fff; margin-bottom: 15px;">Znajdź nas w sieci
                     </h3>
                     <div style="display: flex; gap: 15px;">
-                        <a href="https://www.facebook.com/profile.php?id=61560702814608" target="_blank"
+                        <a href="https://www.facebook.com/profile.php?id=61560702814608" target="_blank" rel="noopener"
                             style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.3s;"
                             onmouseover="this.style.background='var(--primary-color)'"
                             onmouseout="this.style.background='rgba(255,255,255,0.1)'">FB</a>
-                        <a href="https://instagram.com/legacy_events_poland" target="_blank"
+                        <a href="https://instagram.com/legacy_events_poland" target="_blank" rel="noopener"
                             style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.3s;"
                             onmouseover="this.style.background='var(--primary-color)'"
                             onmouseout="this.style.background='rgba(255,255,255,0.1)'">IG</a>
-                        <a href="https://www.youtube.com/@Legacy_Events_Poland" target="_blank"
+                        <a href="https://www.youtube.com/@Legacy_Events_Poland" target="_blank" rel="noopener"
                             style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.3s;"
                             onmouseover="this.style.background='var(--primary-color)'"
                             onmouseout="this.style.background='rgba(255,255,255,0.1)'">YT</a>
@@ -111,6 +111,11 @@
                             onblur="this.style.borderColor='rgba(255,255,255,0.2)'"></textarea>
                     </div>
 
+                    <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                        <label for="website">Nie wypełniaj tego pola</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <div id="form-status" style="display: none; padding: 15px; border-radius: 8px; text-align: center; font-weight: 500;"></div>
 
                     <button type="submit" id="submit-btn" class="cta-button primary"
@@ -137,7 +142,8 @@ document.getElementById('contact-form').addEventListener('submit', async functio
         email: form.querySelector('#email').value.trim(),
         phone: form.querySelector('#phone').value.trim(),
         subject: form.querySelector('#subject').value,
-        message: form.querySelector('#message').value.trim()
+        message: form.querySelector('#message').value.trim(),
+        website: form.querySelector('#website').value
     };
 
     try {

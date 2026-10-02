@@ -236,7 +236,7 @@ $partner_castles = [
 
         <div
             style="margin: 6rem 0; text-align: center; background: rgba(0,0,0,0.3); padding: 50px 30px; border-radius: 16px; border: 1px solid rgba(180, 140, 255, 0.3);">
-            <h3 style="font-size: 2rem; margin-bottom: 20px; color: #fff;">Wsparcie Marketingowe</h2>
+            <h3 style="font-size: 2rem; margin-bottom: 20px; color: #fff;">Wsparcie Marketingowe</h3>
                 <p
                     style="font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px auto; color: var(--text-muted); line-height: 1.6;">
                     Nasz Zespół Kreatywny to Twoje zbrojne ramię w promocji. Pomożemy wymyślić wydarzenie i wesprzemy

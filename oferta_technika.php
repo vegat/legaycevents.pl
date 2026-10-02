@@ -6,7 +6,7 @@ $cat = $oferta_config['technika'];
 
 <main class="page-wrapper">
     <section class="subpage-hero-with-bg">
-        <img src="<?php echo htmlspecialchars($cat['image']); ?>" alt="Background" class="subpage-hero-bg">
+        <img src="<?php echo htmlspecialchars($cat['image']); ?>" alt="<?php echo htmlspecialchars($cat['title']); ?> - LegacyEvents" class="subpage-hero-bg">
         <div class="subpage-hero-content">
             <h1 class="subpage-title">Technika <span class="magical-text">Sceniczna</span></h1>
             <p class="subpage-subtitle">Ożywiamy mury. Tworzymy światy, w które zechcesz wskoczyć.</p>

@@ -35,7 +35,7 @@
                 ],
                 [
                     'name' => 'Zamek Ząbkowice Śląskie',
-                    'desc' => 'Tajemnicze ruiny zamku z podwójnymi scianami dziedzińca, będące doskonałym tłem dla każdego wydarzenia.'
+                    'desc' => 'Tajemnicze ruiny zamku z podwójnymi ścianami dziedzińca, będące doskonałym tłem dla każdego wydarzenia.'
                 ],
                 [
                     'name' => 'Zamek Bolków',
@@ -62,7 +62,7 @@
                 echo '</div>';
                 if (isset($partner['link'])) {
                     echo '<div style="margin-top: 15px;">';
-                    echo '<a href="' . $partner['link'] . '" target="_blank" class="cta-button primary" style="display: inline-block;">Odwiedź stronę</a>';
+                    echo '<a href="' . $partner['link'] . '" target="_blank" rel="noopener" class="cta-button primary" style="display: inline-block;">Odwiedź stronę</a>';
                     echo '</div>';
                 }
                 echo '</div>';

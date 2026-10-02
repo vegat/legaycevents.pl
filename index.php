@@ -30,8 +30,8 @@ require_once 'header.php';
         <div class="hero-content">
             <h1 class="hero-title">
                 Tworzymy <br>
-                <div class="magical-text-wrapper"><span id="animated-word"
-                        class="magical-text word-visible">IMMERSYJNE</span></div> <br>
+                <span class="magical-text-wrapper"><span id="animated-word"
+                        class="magical-text word-visible">IMMERSYJNE</span></span> <br>
                 Światy.
             </h1>
             <p class="hero-subtitle">Nasze wydarzenia nie są tylko do patrzenia - są to doświadczenia. Daj się porwać
@@ -49,7 +49,7 @@ require_once 'header.php';
                         // Start active only the first slide
                         $activeClass = $index === 0 ? 'active' : '';
                         echo '<div class="hero-slide ' . $activeClass . '">';
-                        echo '<img src="' . htmlspecialchars($imgUrl) . '" class="slide-image" alt="Event" loading="eager" decoding="async" />';
+                        echo '<img src="' . htmlspecialchars($imgUrl) . '" class="slide-image" alt="Wydarzenie LegacyEvents na zamku" loading="eager" decoding="async" />';
                         echo '<div class="light-ray-overlay"></div>';
                         echo '</div>';
                     }
@@ -87,7 +87,7 @@ require_once 'header.php';
     <?php
     // Zmienna z zewnętrznym URL do pliku JSON z danymi wydarzenia
     $event_json_url = 'https://raw.githubusercontent.com/vegat/legacyconfig/refs/heads/main/LegacyNextEvent.json';
-    $cache_file = __DIR__ . '/upcoming_event_cache.json';
+    $cache_file = __DIR__ . '/cache/upcoming_event_cache.json';
     $cache_time = 86400; // 24h w sekundach
 
     // Zmienne domyślne dla stanu błędu - fallback na obecny wygląd (Wkrótce)
@@ -133,6 +133,28 @@ require_once 'header.php';
         $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : $upcoming_event['title'];
         $upcoming_event['date']  = !empty($fetched_event['date']) ? $fetched_event['date'] : $upcoming_event['date'];
         $upcoming_event['link']  = !empty($fetched_event['link']) ? $fetched_event['link'] : $upcoming_event['link'];
+
+        // Dane strukturalne wydarzenia dla wyszukiwarek (wymaga daty w formacie RRRR-MM-DD)
+        if (!empty($fetched_event['start_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $fetched_event['start_date'])) {
+            $upcoming_event_ld = [
+                '@context' => 'https://schema.org',
+                '@type' => 'Event',
+                'name' => $upcoming_event['title'],
+                'startDate' => $fetched_event['start_date'],
+                'eventStatus' => 'https://schema.org/EventScheduled',
+                'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
+                'location' => [
+                    '@type' => 'Place',
+                    'name' => $fetched_event['location'] ?? $upcoming_event['title'],
+                    'address' => ['@type' => 'PostalAddress', 'addressRegion' => 'dolnośląskie', 'addressCountry' => 'PL'],
+                ],
+                'image' => $seo_image,
+                'organizer' => ['@id' => $site_url . '/#organization'],
+            ];
+            if ($upcoming_event['link'] !== '#') {
+                $upcoming_event_ld['url'] = $upcoming_event['link'];
+            }
+        }
     } elseif (is_array($fetched_event) && isset($fetched_event['active']) && !$fetched_event['active']) {
         // Jeśli JSON zadeklarował brak bieżącego wydarzenia, wyświetlamy status "Wkrótce"
         $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : 'Kolejnych Naszych Wydarzeniach';
@@ -140,10 +162,13 @@ require_once 'header.php';
         $upcoming_event['link']  = '#';
     }
     ?>
+    <?php if (!empty($upcoming_event_ld)): ?>
+    <script type="application/ld+json"><?php echo json_encode($upcoming_event_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG); ?></script>
+    <?php endif; ?>
     <section class="feature-image-section">
         <div class="feature-image-wrapper">
             <img src="image.php?src=EventPhotos%2F577179540_122198133062356760_1377272530612077950_n.jpg&w=1920&h=800&crop=1"
-                alt="Nasze wydarzenia" loading="lazy">
+                alt="Uczestnicy wydarzenia LegacyEvents na dziedzińcu zamku" loading="lazy">
             <div class="feature-image-overlay"></div>
         </div>
 
@@ -169,7 +194,7 @@ require_once 'header.php';
             </div>
 
             <div class="upcoming-social">
-                <a href="<?php echo htmlspecialchars($upcoming_event['social_link']); ?>" target="_blank"
+                <a href="<?php echo htmlspecialchars($upcoming_event['social_link']); ?>" target="_blank" rel="noopener"
                     class="social-follow-btn">
                     <?php echo htmlspecialchars($upcoming_event['social_text']); ?>
                 </a>
@@ -191,7 +216,7 @@ require_once 'header.php';
                     foreach ($carouselImages as $photo) {
                         $src = str_replace('assets/', '', $photo);
                         echo '<div class="carousel-item">';
-                        echo '<img src="image.php?src=' . urlencode($src) . '&w=400&h=250&crop=1" alt="Event Photo" loading="lazy" />';
+                        echo '<img src="image.php?src=' . urlencode($src) . '&w=400&h=250&crop=1" alt="Zdjęcie z wydarzenia LegacyEvents" width="400" height="250" loading="lazy" />';
                         echo '</div>';
                     }
                 }

@@ -6,7 +6,7 @@ $cat = $oferta_config['animacje'];
 
 <main class="page-wrapper">
     <section class="subpage-hero-with-bg">
-        <img src="<?php echo htmlspecialchars($cat['image']); ?>" alt="Background" class="subpage-hero-bg">
+        <img src="<?php echo htmlspecialchars($cat['image']); ?>" alt="<?php echo htmlspecialchars($cat['title']); ?> - LegacyEvents" class="subpage-hero-bg">
         <div class="subpage-hero-content">
             <h1 class="subpage-title">Animacje & <span class="magical-text">Kostiumy</span></h1>
             <p class="subpage-subtitle">Ludzie, którzy stają się światem. Nasi aktorzy i akrobaci.</p>

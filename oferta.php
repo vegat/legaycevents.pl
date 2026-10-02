@@ -52,7 +52,7 @@ require_once 'oferta_config.php';
             <div class="event-card">
                 <div class="card-glow"></div>
                 <h3>Emocje i Doświadczenia</h3>
-                <p>Nasze wydarzenia to nie tylko patrzenioza. Dbamy o to aby były doświadczeniem, zawsze dostarczały
+                <p>Nasze wydarzenia to nie tylko „patrzysko”. Dbamy o to aby były doświadczeniem, zawsze dostarczały
                     szerokiego wachlarzu emocji, jednocześnie pamiętając aby zapewnić miejsca idealne na zrobienie
                     rodzinnej fotograficznej pamiątki.</p>
             </div>

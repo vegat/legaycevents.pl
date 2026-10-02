@@ -1,10 +1,37 @@
-Options -MultiViews
+Options -MultiViews -Indexes
 RewriteEngine On
+
+ErrorDocument 404 /404.php
+
+# Nie przepisuj ponownie po wewnętrznym przekierowaniu (np. na 404.php)
+RewriteCond %{ENV:REDIRECT_STATUS} !^$
+RewriteRule ^ - [L]
+
+# Pliki wewnętrzne - niedostępne z zewnątrz
+RewriteRule ^(vendor|cache|docker)(/|$) - [R=404,L]
+RewriteRule ^(header|footer|seo|router|galeria_config|oferta_config)(\.php)?$ - [R=404,L]
+RewriteRule ^(LegacyNextEvent\.json|Dockerfile|docker-compose\.yml|\.env.*)$ - [R=404,L]
+
+# Schemat widziany przez klienta (Dokploy/Traefik terminuje TLS i ustawia X-Forwarded-Proto)
+RewriteRule ^ - [E=PROTO:http]
+RewriteCond %{HTTPS} =on [OR]
+RewriteCond %{HTTP:X-Forwarded-Proto} =https [NC]
+RewriteRule ^ - [E=PROTO:https]
+
+# Duplikaty treści: /index(.php) -> /, /strona.php -> /strona (poza endpointami)
+RewriteCond %{THE_REQUEST} \s/+index(\.php)?[\s?] [NC]
+RewriteRule ^ %{ENV:PROTO}://%{HTTP_HOST}/ [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+([^\s?]+?)\.php[\s?] [NC]
+RewriteCond %1 !^(image|msg|sitemap|404)$
+RewriteRule ^ %{ENV:PROTO}://%{HTTP_HOST}/%1 [R=301,L,NE]
+
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+RewriteRule ^favicon\.ico$ image.php?src=Logo/legacy_sticker.png&w=48 [L]
 
 # Zabezpieczenie przed przepisywaniem istniejących katalogów
 RewriteCond %{REQUEST_FILENAME} !-d
 # Zabezpieczenie przed przepisywaniem istniejących plików
 RewriteCond %{REQUEST_FILENAME} !-f
-
-# Przepisywanie adresów bez rozszerzenia na pliki .php
+# Przepisywanie adresów bez rozszerzenia na pliki .php (tylko gdy plik istnieje)
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]

@@ -1,0 +1,20 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    # Bez "ports" - Dokploy (Traefik) kieruje ruch na port 80 kontenera przez własną sieć
+    expose:
+      - "80"
+    environment:
+      SITE_URL: ${SITE_URL:-https://legacyevents.pl}
+      SMTP_HOST: ${SMTP_HOST:-r1.idhosting.pl}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:?Ustaw SMTP_USER w Dokploy}
+      SMTP_PASS: ${SMTP_PASS:?Ustaw SMTP_PASS w Dokploy}
+      MAIL_FROM: ${MAIL_FROM:-zapytanie@legacyevents.pl}
+      MAIL_TO: ${MAIL_TO:-kontakt@legacyevents.pl,banasiak@nexo-it.pl}
+    volumes:
+      - image-cache:/var/www/html/cache
+
+volumes:
+  image-cache:

@@ -1,7 +1,9 @@
 {
-  "_comment": "Zmień 'active' na false, jeśli nie ma jeszcze zaplanowanego wydarzenia, aby wyświetliło się 'Wkrótce'",
+  "_comment": "Zmień 'active' na false, jeśli nie ma jeszcze zaplanowanego wydarzenia, aby wyświetliło się 'Wkrótce'. 'start_date' (RRRR-MM-DD) i 'location' służą do danych strukturalnych dla Google. Pusty 'link' = przycisk 'Link do wydarzenia: Wkrótce!'.",
   "active": true,
-  "title": "Akademia Magii na Zamku Świny",
-  "date": "6 kwietnia 2026",
-  "link": "https://magia.legacyevents.pl/swiny"
+  "title": "Nawiedzony Zamek Świny",
+  "date": "31 października 2026",
+  "start_date": "2026-10-31",
+  "location": "Zamek Świny",
+  "link": ""
 }
