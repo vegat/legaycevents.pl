@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 cache/*
 .env
+=======
+data/*.json
+assets/blog/*
+!assets/blog/.gitkeep
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88

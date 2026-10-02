@@ -1,4 +1,6 @@
-<?php require_once 'header.php'; ?>
+<?php
+$seo_title = "Nasi Partnerzy - Z kim współpracuje LegacyEvents";
+$seo_description = "Poznaj partnerów i zaufane firmy, z którymi współpracujemy przy realizacji największych wydarzeń na terenie całego kraju."; require_once 'header.php'; ?>
 
 <main class="page-wrapper">
     <section class="subpage-hero">

@@ -1,9 +1,15 @@
 {
   "_comment": "Zmień 'active' na false, jeśli nie ma jeszcze zaplanowanego wydarzenia, aby wyświetliło się 'Wkrótce'. 'start_date' (RRRR-MM-DD) i 'location' służą do danych strukturalnych dla Google. Pusty 'link' = przycisk 'Link do wydarzenia: Wkrótce!'.",
   "active": true,
+<<<<<<< HEAD
   "title": "Nawiedzony Zamek Świny",
   "date": "31 października 2026",
   "start_date": "2026-10-31",
   "location": "Zamek Świny",
   "link": ""
+=======
+  "title": "Project OffFace",
+  "date": "13 czerwca 2026",
+  "link": "https://offface.pl"
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
 }

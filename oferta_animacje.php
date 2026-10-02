@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Animacje i Kostiumy | LegacyEvents";
+$seo_description = "Profesjonalne animacje i wynajem kostiumów na eventy. Zapewniamy niezapomniane wrażenia dla uczestników każdego wydarzenia.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Animacje i Kostiumy",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Profesjonalne animacje i wynajem kostiumów na eventy. Zapewniamy niezapomniane wrażenia dla uczestników każdego wydarzenia."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 require_once 'oferta_config.php';
 $cat = $oferta_config['animacje'];
@@ -48,8 +61,11 @@ $cat = $oferta_config['animacje'];
                 <?php
                 $photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
                 if ($photos) {
-                    $src = str_replace('assets/', '', $photos[array_rand($photos)]);
-                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=400&crop=1" alt="Animacje" style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);">';
+                    $rand_photo = $photos[array_rand($photos)];
+                    $src = str_replace('assets/', '', $rand_photo);
+                    $alt = !empty($graphics_seo[$rand_photo]['alt']) ? htmlspecialchars($graphics_seo[$rand_photo]['alt']) : 'Animacje Eventowe';
+                    $title_attr = !empty($graphics_seo[$rand_photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$rand_photo]['title']) . '"' : '';
+                    echo '<img src="image.php?src=' . urlencode($src) . '&w=600&h=400&crop=1" alt="' . $alt . '" ' . $title_attr . ' style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);">';
                 }
                 ?>
             </div>
@@ -77,7 +93,10 @@ $cat = $oferta_config['animacje'];
                 wydarzenia</span>.</p>
 
         <div style="margin-top: 60px; text-align: center;">
-            <a href="kontakt" class="cta-button primary">Opowiedz nam o swoim evencie – dopasujemy animacje</a>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="kontakt" class="cta-button primary">Opowiedz nam o swoim evencie – dopasujemy animacje</a>
+                <a href="https://widget.legacyevents.pl/uslugi" target="_blank" class="cta-button primary">KONFIGURATOR USŁUG Z CENNIKIEM</a>
+            </div>
         </div>
     </section>
 </main>

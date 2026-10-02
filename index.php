@@ -1,4 +1,6 @@
 <?php
+$seo_title = "LegacyEvents - Kompleksowa organizacja eventów";
+$seo_description = "Tworzymy niesamowite wydarzenia, koncerty, eventy firmowe oraz pokazy sceniczne. Poznaj możliwości agencji LegacyEvents na Dolnym Śląsku.";
 // Prepare hero slider images before header to allow preloading
 $heroSliderImages = [];
 $photos = glob('assets/EventPhotos/*.{jpg,jpeg,png,webp}', GLOB_BRACE);
@@ -17,7 +19,10 @@ if ($photos) {
         $sliderPhotos = array_slice($horizontalPhotos, 0, 5); // Take 5 random photos
         foreach ($sliderPhotos as $photo) {
             $src = str_replace('assets/', '', $photo);
-            $heroSliderImages[] = 'image.php?src=' . urlencode($src) . '&w=1200&h=800&crop=1';
+            $heroSliderImages[] = [
+                'url' => 'image.php?src=' . urlencode($src) . '&w=1200&h=800&crop=1',
+                'path' => $photo
+            ];
         }
     }
 }
@@ -29,13 +34,19 @@ require_once 'header.php';
         <div class="hero-background-glow"></div>
         <div class="hero-content">
             <h1 class="hero-title">
+<<<<<<< HEAD
                 Tworzymy <br>
                 <span class="magical-text-wrapper"><span id="animated-word"
                         class="magical-text word-visible">IMMERSYJNE</span></span> <br>
                 Światy.
+=======
+                Zorganizuj <br>
+                <div class="magical-text-wrapper"><span id="animated-word"
+                        class="magical-text word-visible">NIEZAPOMNIANE</span></div> <br>
+                Wydarzenie.
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
             </h1>
-            <p class="hero-subtitle">Nasze wydarzenia nie są tylko do patrzenia - są to doświadczenia. Daj się porwać
-                kreatywnym światom, które sprowadzamy na najciekawsze lokalizacje w Polsce.</p>
+            <p class="hero-subtitle">Twoi goście zasługują na coś więcej niż zwykły event. Otrzymujesz od nas pełną gwarancję niesamowitych wrażeń, absolutne bezpieczeństwo i profesjonalną organizację w najciekawszych lokalizacjach w Polsce.</p>
             <div class="hero-buttons">
                 <a href="oferta" class="cta-button primary">Odkryj Naszą Ofertę</a>
                 <a href="kontakt" class="cta-button secondary">Skontaktuj się</a>
@@ -45,11 +56,20 @@ require_once 'header.php';
             <div class="hero-slider-container">
                 <?php
                 if (!empty($heroSliderImages)) {
-                    foreach ($heroSliderImages as $index => $imgUrl) {
+                    foreach ($heroSliderImages as $index => $imgData) {
+                        $imgUrl = $imgData['url'];
+                        $path = $imgData['path'];
+                        $alt = !empty($graphics_seo[$path]['alt']) ? htmlspecialchars($graphics_seo[$path]['alt']) : 'Event LegacyEvents';
+                        $title_attr = !empty($graphics_seo[$path]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$path]['title']) . '"' : '';
+                        
                         // Start active only the first slide
                         $activeClass = $index === 0 ? 'active' : '';
                         echo '<div class="hero-slide ' . $activeClass . '">';
+<<<<<<< HEAD
                         echo '<img src="' . htmlspecialchars($imgUrl) . '" class="slide-image" alt="Wydarzenie LegacyEvents na zamku" loading="eager" decoding="async" />';
+=======
+                        echo '<img src="' . htmlspecialchars($imgUrl) . '" class="slide-image" alt="' . $alt . '" ' . $title_attr . ' loading="eager" decoding="async" />';
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
                         echo '<div class="light-ray-overlay"></div>';
                         echo '</div>';
                     }
@@ -85,10 +105,15 @@ require_once 'header.php';
 
     <!-- Full Width Feature Image & Upcoming Event Box -->
     <?php
+<<<<<<< HEAD
     // Zmienna z zewnętrznym URL do pliku JSON z danymi wydarzenia
     $event_json_url = 'https://raw.githubusercontent.com/vegat/legacyconfig/refs/heads/main/LegacyNextEvent.json';
     $cache_file = __DIR__ . '/cache/upcoming_event_cache.json';
     $cache_time = 86400; // 24h w sekundach
+=======
+    // Wczytanie lokalnego pliku JSON z danymi wydarzenia
+    $local_json_file = __DIR__ . '/LegacyNextEvent.json';
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
 
     // Zmienne domyślne dla stanu błędu - fallback na obecny wygląd (Wkrótce)
     $upcoming_event = [
@@ -103,32 +128,18 @@ require_once 'header.php';
     $fetched_event = null;
     $is_active_event = false;
 
-    // Sprawdzenie czy cache istnieje i czy jest wazny (ponizej 24h)
-    if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
-        $json_data = file_get_contents($cache_file);
+    // Odczyt z lokalnego pliku
+    if (file_exists($local_json_file)) {
+        $json_data = file_get_contents($local_json_file);
         if ($json_data !== false) {
             $fetched_event = json_decode($json_data, true);
-        }
-    } else {
-        // Pobieranie nowych danych z URL jeśli cache wygasł
-        $context = stream_context_create(['http' => ['timeout' => 5]]);
-        $json_data = @file_get_contents($event_json_url, false, $context);
-        
-        if ($json_data !== false) {
-            $parsed = json_decode($json_data, true);
-            if ($parsed !== null) {
-                file_put_contents($cache_file, $json_data);
-                $fetched_event = $parsed;
-            }
-        } elseif (file_exists($cache_file)) {
-            // W razie błędu serwera JSON, zaczytanie ostatniego dobrego cache, nawet jeśli jest stary
-            $fetched_event = json_decode(file_get_contents($cache_file), true);
         }
     }
 
     // Aplikowanie pobranych danych z JSON;
-    if (is_array($fetched_event) && isset($fetched_event['active']) && $fetched_event['active']) {
+    if (is_array($fetched_event) && (!isset($fetched_event['active']) || $fetched_event['active'])) {
         $is_active_event = true;
+<<<<<<< HEAD
         // Aktualizacja tytułu, daty i linku jeśli przesłane
         $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : $upcoming_event['title'];
         $upcoming_event['date']  = !empty($fetched_event['date']) ? $fetched_event['date'] : $upcoming_event['date'];
@@ -160,6 +171,18 @@ require_once 'header.php';
         $upcoming_event['title'] = !empty($fetched_event['title']) ? $fetched_event['title'] : 'Kolejnych Naszych Wydarzeniach';
         $upcoming_event['date']  = 'Wkrótce';
         $upcoming_event['link']  = '#';
+=======
+        $upcoming_event['subtitle'] = !empty($fetched_event['subtitle']) ? $fetched_event['subtitle'] : $upcoming_event['subtitle'];
+        $upcoming_event['title']    = !empty($fetched_event['title']) ? $fetched_event['title'] : $upcoming_event['title'];
+        $upcoming_event['date']     = !empty($fetched_event['date']) ? $fetched_event['date'] : $upcoming_event['date'];
+        $upcoming_event['link']     = !empty($fetched_event['link']) ? $fetched_event['link'] : $upcoming_event['link'];
+    } else {
+        // Jeśli JSON zadeklarował brak bieżącego wydarzenia (active = false), wyświetlamy status "Wkrótce"
+        $upcoming_event['subtitle'] = 'Już wkrótce zobaczymy się na...';
+        $upcoming_event['title']    = 'Kolejnych Naszych Wydarzeniach';
+        $upcoming_event['date']     = 'Wkrótce';
+        $upcoming_event['link']     = '#';
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
     }
     ?>
     <?php if (!empty($upcoming_event_ld)): ?>
@@ -215,8 +238,15 @@ require_once 'header.php';
                     $carouselImages = array_merge($photos, $photos);
                     foreach ($carouselImages as $photo) {
                         $src = str_replace('assets/', '', $photo);
+                        $alt = !empty($graphics_seo[$photo]['alt']) ? htmlspecialchars($graphics_seo[$photo]['alt']) : 'Zdjęcie Eventowe';
+                        $title_attr = !empty($graphics_seo[$photo]['title']) ? 'title="' . htmlspecialchars($graphics_seo[$photo]['title']) . '"' : '';
+                        
                         echo '<div class="carousel-item">';
+<<<<<<< HEAD
                         echo '<img src="image.php?src=' . urlencode($src) . '&w=400&h=250&crop=1" alt="Zdjęcie z wydarzenia LegacyEvents" width="400" height="250" loading="lazy" />';
+=======
+                        echo '<img src="image.php?src=' . urlencode($src) . '&w=400&h=250&crop=1" alt="' . $alt . '" ' . $title_attr . ' loading="lazy" />';
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
                         echo '</div>';
                     }
                 }
@@ -260,13 +290,71 @@ require_once 'header.php';
         </div>
     </section>
 
+    <!-- Nasze Usługi Section -->
+    <section class="services-section" style="padding: 100px 20px; text-align: center;">
+        <h2 class="section-title">Poznaj nasze <span class="magical-text">możliwości</span></h2>
+        <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto 40px; font-size: 1.1rem;">
+            Zyskujesz nie tylko sprzęt, ale pełne zaplecze techniczne i artystyczne. Wypróbuj nasze rozwiązania i przekonaj się, jak ułatwiamy organizację, oszczędzając Twój czas i gwarantując bezproblemowy przebieg każdej imprezy.
+        </p>
+        <div class="services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+            <a href="oferta_wydarzenia" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Wydarzenia</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Kompleksowa, kreatywna organizacja eventów od A do Z.</p>
+            </a>
+            <a href="oferta_technika" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Technika</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Niezawodne sceny, światło i potężne nagłośnienie.</p>
+            </a>
+            <a href="oferta_animacje" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Animacje</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Profesjonalne atrakcje dla najmłodszych i całych rodzin.</p>
+            </a>
+            <a href="oferta_rental" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Rental</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Szybki wynajem namiotów, krzeseł i sprzętu na Twój event.</p>
+            </a>
+            <a href="oferta_koncerty" style="background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">Koncerty</h3>
+                <p style="font-size: 0.95rem; color: #ccc;">Spektakularne realizacje sceniczne dla tysięcy uczestników.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" style="padding: 100px 20px; background: rgba(10, 10, 15, 0.8);">
+        <h2 class="section-title">Dziesiątki tysięcy <span class="magical-text">zadowolonych uczestników</span> wydarzeń</h2>
+        <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto 40px; text-align: center; font-size: 1.1rem;">
+            Zamiast o sobie opowiadać, woleliśmy oddać głos tym, dla których to wszystko tworzymy. Zobacz, jak nasze wydarzenia oceniają sami uczestnicy.
+        </p>
+        <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+            <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Niesamowity festiwal! Oprawa wizualna, neony i potężne nagłośnienie to był absolutny kosmos. Nigdy wcześniej nie widziałem zamku w takim wydaniu. Zdecydowanie najlepsza impreza, na jakiej byłem w tym roku!</p>
+                <div style="font-weight: bold; color: #fff;">Michał S.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Uczestnik Festiwalu</div>
+            </div>
+            <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Byliśmy całą rodziną i animacje przerosły nasze oczekiwania. Aktorzy genialnie wcielali się w swoje role, a cała scenografia sprawiła, że naprawdę przenieśliśmy się do innego świata. Dzieci wróciły zachwycone!</p>
+                <div style="font-weight: bold; color: #fff;">Karolina T.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Uczestniczka Akademii Magii</div>
+            </div>
+            <div class="testimonial-card" style="background: var(--surface-color); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div style="color: var(--primary-color); font-size: 3rem; line-height: 0.5; margin-bottom: 10px;">"</div>
+                <p style="font-style: italic; color: #ddd; margin-bottom: 20px; font-size: 0.95rem;">Immersyjna gra terenowa to był strzał w dziesiątkę! Masa zagadek, fantastyczni prowadzący i rewelacyjny, mroczny klimat. Cała nasza ekipa bawiła się znakomicie. Na pewno wrócimy na kolejne edycje.</p>
+                <div style="font-weight: bold; color: #fff;">Tomasz K.</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Gracz Terenowy</div>
+            </div>
+        </div>
+    </section>
+
     <!-- Specialist Hero Section -->
     <section class="specialist-hero"
         style="padding: 100px 20px; text-align: center; background: linear-gradient(to bottom, var(--surface-color), var(--bg-color));">
         <div style="max-width: 900px; margin: 0 auto;">
             <h2 class="section-title" style="margin-bottom: 20px;">
-                Jesteśmy <span class="magical-text">specjalistami</span> w ożywianiu <span class="magical-text">zamków,
-                    ruin</span> i innych obiektów historycznych
+                Jako <span class="magical-text">jedna z niewielu agencji</span> specjalizujemy się w ożywianiu <span class="magical-text">zamków,
+                    ruin</span> i obiektów historycznych
             </h2>
             <div
                 style="width: 100px; height: 3px; background: var(--primary-glow); margin: 0 auto 30px auto; box-shadow: 0 0 10px var(--primary-color);">

@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+<<<<<<< HEAD
 Disallow: /msg.php
 Disallow: /blog
 
@@ -14,5 +15,7 @@ User-agent: PerplexityBot
 User-agent: Google-Extended
 Allow: /
 Disallow: /msg.php
+=======
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
 
 Sitemap: https://legacyevents.pl/sitemap.xml

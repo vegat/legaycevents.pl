@@ -1,4 +1,6 @@
-<?php require_once 'header.php'; ?>
+<?php
+$seo_title = "Kontakt - Agencja LegacyEvents";
+$seo_description = "Skontaktuj się z nami. Napisz lub zadzwoń, a wycenimy i zorganizujemy Twój wymarzony event."; require_once 'header.php'; ?>
 
 <main class="page-wrapper">
     <section class="subpage-hero">

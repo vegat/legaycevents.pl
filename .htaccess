@@ -32,6 +32,14 @@ RewriteRule ^favicon\.ico$ image.php?src=Logo/legacy_sticker.png&w=48 [L]
 RewriteCond %{REQUEST_FILENAME} !-d
 # Zabezpieczenie przed przepisywaniem istniejących plików
 RewriteCond %{REQUEST_FILENAME} !-f
+<<<<<<< HEAD
 # Przepisywanie adresów bez rozszerzenia na pliki .php (tylko gdy plik istnieje)
 RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+=======
+
+# Przekierowanie dla sitemap
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# Przepisywanie adresów bez rozszerzenia na pliki .php
+>>>>>>> 1dcba791b9cf01312c8709c84e4215fd9a061e88
 RewriteRule ^([^\.]+)$ $1.php [NC,L]

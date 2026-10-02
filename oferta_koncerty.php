@@ -1,4 +1,17 @@
 <?php
+$seo_title = "Realizacja Koncertów | LegacyEvents";
+$seo_description = "Kompleksowa obsługa techniczna i nagłośnieniowa koncertów. Zadbamy o perfekcyjny dźwięk i światło.";
+ob_start(); ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Realizacja Koncertów",
+  "provider": { "@type": "LocalBusiness", "name": "LegacyEvents" },
+  "description": "Kompleksowa obsługa techniczna i nagłośnieniowa koncertów. Zadbamy o perfekcyjny dźwięk i światło."
+}
+</script>
+<?php $seo_schema = ob_get_clean();
 require_once 'header.php';
 require_once 'oferta_config.php';
 $cat = $oferta_config['koncerty'];
